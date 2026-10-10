@@ -11,6 +11,7 @@ export const virtualRatios = [2.65, 2.25, 1.89, 1.57, 1.30, 1.07, .85, .65];
 export const clamp = (v:number, a:number, b:number) => Math.max(a,Math.min(b,v));
 export const lerp = (a:number,b:number,t:number) => a+(b-a)*t;
 export type Snapshot = ReturnType<typeof calculate>;
+export type RpmGuidance = {min:number;max:number;target:number;label:string;status:'Below range'|'In range'|'Above range';explanation:string};
 export function calculate(i:Inputs) {
   const connected = i.gear==='D'||i.gear==='R';
   const speed = i.gear==='P'?0:Math.abs(i.speed);
@@ -45,6 +46,23 @@ export function calculate(i:Inputs) {
   const phase = !connected ? 'Range disconnected' : lockup ? 'Lock-up engaged' : speedRatio<.15 ? 'Stall / launch' : speedRatio<.85 ? 'Torque multiplication' : 'Fluid coupling';
   const currentVirtual = i.manual ? actualVirtual : virtualRatios.reduce((best,r,idx)=>Math.abs(r-ratio)<Math.abs(virtualRatios[best]-ratio)?idx:best,0)+1;
   return { engineRPM:Math.round(engineRPM), turbineRPM:Math.round(actualTurbine), wheelRPM, rearWheelRPM:roadWheelRPM, rearLeftRPM:roadWheelRPM*(1-wheelDifference),rearRightRPM:roadWheelRPM*(1+wheelDifference), slipFactor, ratio, slip, multiplication, lockup, statorLocked, rearActivity, connected, phase, currentVirtual, stepped, protectedRatio:ratio<requestedRatio-.01, overrun:connected&&i.gear==='D'&&i.throttle<1&&speed>12, leftRPM:wheelRPM*(1-wheelDifference),rightRPM:wheelRPM*(1+wheelDifference), outputRPM:connected?actualTurbine/ratio:0, direction:i.gear==='R'?-1:1 };
+}
+export function rpmGuidance(i:Inputs, actualRpm:number):RpmGuidance {
+  const speed=Math.abs(i.speed),connected=i.gear==='D'||i.gear==='R';
+  let min=750,max=1050,label='Idle / stationary',explanation='At a stop, the converter lets the engine idle while the driven side can remain still.';
+  if(!connected){min=750;max=1200;label='Range disconnected';explanation='Park and Neutral do not need elevated RPM. Use throttle only to observe the unloaded engine response.';}
+  else if(i.brake>25&&speed<3){min=750;max=1000;label='Stopped in Drive';explanation='Normal idle is appropriate. The impeller turns, the turbine is stalled, and the converter produces creep torque.';}
+  else if(speed<10&&i.throttle<15){min=750;max=1300;label='Creep / parking speed';explanation='Little or no throttle is normally needed; control creep with the brake.';}
+  else if(i.brake>10){min=900;max=1800;label='Deceleration';explanation='Release the accelerator and let vehicle speed fall. Higher RPM may reflect engine braking or a selected virtual ratio.';}
+  else if(i.throttle>=65){min=i.driveMode==='Sport'?3500:3000;max=5200;label='Strong acceleration';explanation='The IVT may hold the engine in a higher power band while road speed catches up. This is expected under heavy demand.';}
+  else if(i.throttle>=30){min=i.driveMode==='Sport'?2500:2000;max=i.driveMode==='Sport'?4200:3500;label='Moderate acceleration';explanation='A lower IVT ratio raises engine speed for response, then relaxes as the requested acceleration is reached.';}
+  else if(speed>=80){min=i.driveMode==='Sport'?2100:1300;max=i.driveMode==='Sport'?3200:2400;label='Highway cruise';explanation='Light throttle and converter lock-up should keep RPM relatively low. Sport can deliberately hold more RPM for response.';}
+  else if(speed>=30){min=i.driveMode==='Sport'?1900:1100;max=i.driveMode==='Sport'?3000:2200;label='Steady road speed';explanation='With light load, the IVT should favour a taller ratio and the converter may lock when conditions allow.';}
+  else {min=1100;max=2400;label='Urban driving';explanation='A modest RPM band suits gentle acceleration and steady low-speed travel.';}
+  if(i.traction==='Snow'||i.traction==='Low grip'){max=Math.min(max,3200);explanation+=' On low grip, use smoother throttle and avoid unnecessary RPM spikes.';}
+  const target=Math.round(((min+max)/2)/50)*50;
+  const status=actualRpm<min-100?'Below range':actualRpm>max+100?'Above range':'In range';
+  return {min,max,target,label,status,explanation};
 }
 export function stepVehicle(i:Inputs, dt:number):Inputs {
   if(i.gear==='P')return {...i,speed:0};

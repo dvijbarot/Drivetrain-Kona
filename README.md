@@ -44,7 +44,7 @@ The mechanical scene fills the main page width. **Chapters / Components** and **
 
 - **Learn:** 30 chapters, three explanatory stages per chapter, Previous / Next / Replay and browser-local completion tracking.
 - **Explore:** focused assemblies, opaque / transparent / cutaway / exploded views, selected-part explanations at three depths, isolate, hide / show, camera reset and angle presets.
-- **Simulator:** throttle, brake, P/R/N/D, speed, Normal/Sport/Snow, road grip, steering, manual virtual steps, automatic or custom ratio, optional requested RPM and optional speed evolution.
+- **Simulator:** throttle, brake, P/R/N/D, speed, Normal/Sport/Snow, road grip, steering, manual virtual steps, automatic or custom ratio, optional requested RPM and optional speed evolution. A live RPM guide responds to the selected speed, load, range, mode and grip, then explains an illustrative suitable band and midpoint.
 - **Power flow:** connected torque path, playback speeds down to 0.05×, timeline and individual frame steps.
 - **Compare:** fixed automatic gearsets, continuously variable pulleys and software-controlled IVT steps.
 - **Settings:** graphics quality, labels, torque paths, numeric readouts, selection dimming and optional recorded engine sound.
@@ -55,13 +55,11 @@ Numerical readouts are illustrative. The core ratio and wheel-speed relationship
 
 ## Vehicle and detailed assemblies
 
-The exterior now uses real imagery in place of the reconstructed body shell. Personal builds use Hyundai's transparent, 36-frame **2026 Ecotronic Grey (PE2)** exterior sequence. Drag, swipe, use arrow keys or select an exterior angle. The manufacturer imagery shows a US SEL Sport; Canadian Preferred AWD Trend wheels and equipment differ and the exhibit labels that scope.
+The exterior is an orbitable 3D SX2 teaching shell in **Ecotronic Grey (PE2)**. Use **3D exterior**, **X-ray shell**, and **Drivetrain** to move continuously from the body surface to the installed mechanical system. The shell, hood, glass and interior remain interactive while the camera can orbit, zoom and pan through a full 360 degrees.
 
-Use **Drivetrain / X-ray / Exterior**, **Chassis**, **Floor pan** and **Reveal engine bay** to control the vehicle context. X-ray registers the side photograph to visible wheel centres and reveals the 3D internals; packaging remains representative. This fixed side presentation avoids stretching a still photograph around a freely orbiting model. **Drivetrain** restores unrestricted mechanical rotation, zoom and pan. Camera presets include **Wheel detail**, **Underside** and **Engine bay**. Exterior component buttons open their detailed 3D assemblies.
+Use **Drivetrain / X-ray shell / 3D exterior**, **Chassis**, **Floor pan** and **Open hood** to control the vehicle context. Camera presets include **Wheel detail**, **Underside** and **Engine bay**. Choosing Full drivetrain or 3D exterior reliably restores the complete vehicle, its perspective camera and exterior view.
 
-**My car** accepts a JPEG, PNG or WebP photo of your own vehicle. It stays in the browser and is never uploaded. Public distribution must build with `VITE_PUBLIC_BUILD=true`: that disables Hyundai image requests and uses the included CC BY-SA SX2 reference photo, whose paint code is unverified. OEM reference image binaries are not bundled. See ATTRIBUTION.md for the different asset rights.
-
-The chassis and component castings are original educational reconstructions based on public documentation. They are not scanned or manufacturer CAD. The close-up component lessons use enlarged models so internal motion remains readable. The old procedural body assets are retained only as editable legacy source; the app does not render them.
+The body, chassis and component castings are original educational reconstructions based on public documentation. They are not scanned or manufacturer CAD. The close-up component lessons use enlarged models so internal motion remains readable.
 
 To regenerate the source meshes (optional; Blender 4.3+ required):
 
@@ -76,7 +74,7 @@ You can rebuild one family with `blender -b --python scripts/build_models.py -- 
 
 - src/mechanics.ts — pure state calculation, speed integration, constant-length pulley/chain geometry.
 - src/Assets.tsx — GLB assemblies, physically based materials, chassis and mesh LOD selection.
-- src/PhotoExterior.tsx — manufacturer exterior spin, licensed fallback, local personal photos and exterior controls.
+- src/PhotoExterior.tsx — retained legacy photo-reference component; it is not mounted by the current 3D-shell experience.
 - scripts/build_models.py — editable original Blender modeling recipe and baked contact occlusion.
 - scripts/compress_models.mjs — local Draco compression, decoder installation and asset manifest.
 - public/models — original GLB body, chassis, engine, IVT casting and wheel/brake assets in two LODs.
@@ -90,7 +88,7 @@ You can rebuild one family with `blender -b --python scripts/build_models.py -- 
 - tests/assets.test.ts — GLB assembly contracts, meter-scale tire geometry, shading attributes and actual LOD reduction.
 - tests/browser_smoke.py — browser interaction and viewport checks using installed Chromium / Playwright.
 - tests/vehicle_views.py — installed-vehicle controls, high-quality camera views and visual-review captures.
-- tests/photo_exterior.py — real exterior navigation, cutaway registration, local-photo privacy, responsive layouts and public-build image restrictions.
+- tests/shell_guidance.py — 3D body loading, orbit input, X-ray mode, exterior restoration and live RPM-guidance checks.
 - tests/presentation_audio.py — dominant canvas sizing, drawer access, text contrast, focus mode and recorded-audio playback/pause/mute.
 
 Optional audio uses licensed real Hyundai Kona recordings at idle, 2,000 and 3,000 RPM by KVV Audio, with smooth playback blending. Sound stays muted until enabled, fades on pause/mute and is silent in background tabs. The recorded vehicle year and engine variant are unverified. See `public/audio/README.md` for sources, CC BY 4.0 credit and adaptation details.
@@ -107,4 +105,4 @@ The canvas and audio checks cover full-width framing, desktop and touch drawers,
 
 ## Privacy
 
-No analytics, accounts, external runtime model loaders or server backend. Font, HDR, licensed fallback photo and models load locally. Personal builds request manufacturer exterior reference images directly from Hyundai's image CDN; public builds disable these requests. Selected personal photos use browser-local object URLs and are never uploaded. Lesson progress is stored only in localStorage in the browser.
+No analytics, accounts, external runtime model loaders or server backend. Font, HDR, body shell and drivetrain models load locally. The current public experience does not request manufacturer exterior imagery. Lesson progress is stored only in localStorage in the browser.

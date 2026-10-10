@@ -101,7 +101,7 @@ Reused assets: Poly Haven CC0 studio HDR and Inter OFL font. See ATTRIBUTION.md 
 - [Hyundai Canada: 2026 Kona](https://www.hyundaicanada.com/en/showroom/2026/kona) lists Ecotronic Grey. Its current configurator uses separately hosted CGI assets. A publicly retrievable, exact 2026 Preferred AWD Trend spin was not established; the US manufacturer imagery is explicitly labeled a reference.
 - [Alexander-93's SX2 photograph](https://commons.wikimedia.org/wiki/File:Hyundai_Kona_(SX2)_1X7A1646.jpg): Wikimedia image metadata confirms author, date and CC BY-SA 4.0. Its paint code is **unconfirmed**; it is not labeled as confirmed Ecotronic Grey. No recolouring or background editing was applied.
 - Personal manufacturer references stay on Hyundai's image host. **Public distribution uses `VITE_PUBLIC_BUILD=true`, which substitutes the licensed Commons photograph and does not request OEM images.** The user may select their own car photo locally in either build. Asset rights and terms are recorded in ATTRIBUTION.md.
-- The original procedural body GLBs and Blender recipe remain as legacy source assets, but the reconstructed shell is no longer rendered. Engine-bay, wheel and underbody views use the interactive mechanical model. “Reveal engine bay” switches into that view; no opening hood is falsely animated on a still image.
+- The original procedural SX2 body GLBs are rendered as the orbitable 3D exterior and X-ray shell. Engine-bay, wheel and underbody views use the same interactive vehicle coordinate system. The body is representative teaching geometry rather than OEM CAD.
 
 
 ## Recorded engine audio and playback assumptions

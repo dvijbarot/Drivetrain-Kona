@@ -281,6 +281,17 @@ select option { background: #252524; }
 .presets { display: flex; gap: 7px; margin-bottom: 15px; flex-wrap: wrap; }
 .presets button { font-size: 11px; color: #e0d8c2; border: 1px solid #555141; border-radius: 4px; padding: 5px 9px; background: #29281f; }
 .presets button:hover, .presets button.active { background: #473922; border-color: #a28552; color: #ffebc8; }
+.rpm-coach { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 22px; align-items: center; padding: 14px 16px; margin-bottom: 17px; border: 1px solid #565044; border-left: 3px solid var(--green); border-radius: 6px; background: #29271f; }
+.rpm-coach h3 { margin-top: 5px; font-size: 16px; font-weight: 520; color: #f5eedc; }
+.rpm-coach p { max-width: 760px; margin-top: 5px; color: #d1cbbd; font-size: 12px; line-height: 1.55; }
+.rpm-coach-reading { min-width: 230px; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.rpm-coach-reading>span { color: var(--green); font-size: 10px; letter-spacing: .8px; text-transform: uppercase; }
+.rpm-coach.above-range { border-left-color: var(--orange); }
+.rpm-coach.above-range .rpm-coach-reading>span, .rpm-coach.below-range .rpm-coach-reading>span { color: var(--orange); }
+.rpm-coach-reading strong { font-family: ui-monospace, monospace; font-size: 19px; font-weight: 500; color: #fff6e5; }
+.rpm-coach-reading strong small { font-family: Inter, sans-serif; font-size: 10px; color: #bdb7a9; }
+.rpm-coach-reading em { color: #bbb5a8; font-size: 10px; font-style: normal; }
+.rpm-coach-reading button { margin-top: 5px; padding: 6px 9px; border: 1px solid #806a48; border-radius: 4px; background: #3b3021; color: #ffe7bd; font-size: 10px; }
 .controls-grid { display: grid; grid-template-columns: 1fr 1fr 1.15fr 1fr .9fr .85fr; gap: 22px; }
 .selector-control { display: flex; flex-direction: column; gap: 8px; }
 .selector-control>label { font-size: 12px; color: #d4d1b9; }
@@ -544,6 +555,8 @@ select option { background: #252524; }
   .footer>span { font-size: 8px; gap: 6px; letter-spacing: .1px; }
   .controls-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 20px; }
   .simulator-panel { padding: 17px 15px; }
+  .rpm-coach { grid-template-columns: 1fr; gap: 12px; padding: 13px; }
+  .rpm-coach-reading { min-width: 0; align-items: flex-start; }
   .sim-head { gap: 13px; }
   .sim-head .eyebrow { font-size: 10px; letter-spacing: .5px; }
   .evolve { font-size: 10px; gap: 4px; }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculate, defaults, pulleyRadii, beltLength, beltPath, stepVehicle } from '../src/mechanics.ts';
+import { calculate, defaults, pulleyRadii, beltLength, beltPath, stepVehicle, rpmGuidance } from '../src/mechanics.ts';
 import { chapters, lessonInputs, parts } from '../src/content.ts';
 test('pulley ratio and fixed chain length hold throughout the full slider range',()=>{
  const target=beltLength(.58,.58);
@@ -53,6 +53,16 @@ test('vehicle integration produces creep, responds to brakes, and keeps Park sto
  assert.ok(stepVehicle({...defaults,speed:0,throttle:0},1).speed>0);
  assert.ok(stepVehicle({...defaults,brake:100},1).speed<defaults.speed);
  assert.equal(stepVehicle({...defaults,gear:'P'},1).speed,0);
+});
+test('RPM guidance follows speed, throttle, mode and range',()=>{
+ const stopped=rpmGuidance({...defaults,speed:0,throttle:0,brake:100},750);
+ assert.equal(stopped.label,'Stopped in Drive');assert.equal(stopped.status,'In range');
+ const cruise=rpmGuidance({...defaults,speed:100,throttle:12},calculate({...defaults,speed:100,throttle:12}).engineRPM);
+ assert.equal(cruise.label,'Highway cruise');assert.ok(cruise.target<2500);
+ const launch=rpmGuidance({...defaults,speed:8,throttle:85,driveMode:'Sport'},4200);
+ assert.equal(launch.label,'Strong acceleration');assert.ok(launch.target>cruise.target);
+ const park=rpmGuidance({...defaults,gear:'P',speed:0},2000);
+ assert.equal(park.label,'Range disconnected');assert.equal(park.status,'Above range');
 });
 test('all 30 lessons use real component IDs and finite coherent snapshots',()=>{
  assert.equal(chapters.length,30);
