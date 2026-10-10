@@ -29,7 +29,7 @@ with sync_playwright() as p:
     page.get_by_label("Chassis",exact=True).check(force=True)
     page.get_by_label("Floor pan",exact=True).check(force=True)
     page.get_by_label("Floor pan",exact=True).uncheck(force=True)
-    page.get_by_label("Open hood",exact=True).check(force=True)
+    page.get_by_label("Reveal engine bay",exact=True).check(force=True)
     print("Vehicle layers and hood controls checked",flush=True)
 
     page.get_by_role("button",name="Settings",exact=True).click(force=True)
@@ -46,7 +46,7 @@ with sync_playwright() as p:
     for preset,filename in [("Wheel detail","wheel-high"),("Underside","underbody-high"),("Engine bay","enginebay-high")]:
         camera(preset)
         page.screenshot(path=str(OUT/(filename+".png")))
-        assert page.get_by_label("Open hood",exact=True).is_checked()
+        assert page.get_by_label("Reveal engine bay",exact=True).is_checked()
         print("High graphics: "+preset,flush=True)
 
     camera("Wheel detail")

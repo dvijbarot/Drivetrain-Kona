@@ -29,3 +29,47 @@
 .asset-loading{position:absolute;bottom:18px;right:24px;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:10px;color:#acbdc7;background:#172028e8;border:1px solid #364952;border-radius:5px;z-index:12;pointer-events:none}.asset-loading .loader{width:12px;height:12px;margin:0}
 @media(max-width:1300px){.vehicle-controls{padding:8px 22px;gap:12px}.vehicle-controls small{display:none}.vehicle-controls>label{font-size:8px}}
 @media(max-width:600px){.vehicle-controls{overflow-x:auto;gap:12px;padding:8px 15px;min-height:44px}.vehicle-controls>span{display:none}.body-switch{width:175px}.vehicle-controls>label{font-size:8px}.camera-tools>select{font-size:7px;width:83px;right:35px;top:36px}.scene-views{max-width:none}}
+
+/* Real exterior imagery sits above the mechanical exhibit. The opaque view
+   uses a 36-frame manufacturer spin; cutaway registration stays on one side. */
+.canvas-host.exterior-active>div:first-child{opacity:0;pointer-events:none}
+.world-labels[hidden],.photo-exterior[hidden]{display:none}
+.photo-exterior{position:absolute;inset:0;z-index:4;pointer-events:none}
+.photo-solid{background:radial-gradient(ellipse at 52% 56%,#30383f 0%,#1b2228 53%,#161c21 80%)}
+.photo-stage{position:absolute;inset:160px 28px 108px;display:flex;align-items:center;justify-content:center;pointer-events:auto;touch-action:pan-y;cursor:grab;outline-offset:3px;outline-color:#93b3c2}
+.photo-stage:active{cursor:grabbing}
+.exterior-photo{display:block;width:100%;height:100%;max-height:100%;object-fit:contain;user-select:none;pointer-events:none;-webkit-user-drag:none;filter:drop-shadow(0 16px 16px #0003)}
+.photo-solid[data-source="hyundai"] .photo-stage{overflow:hidden}
+.photo-solid[data-source="hyundai"] .exterior-photo{width:88%;height:auto;max-height:none;flex-shrink:0;transform:translateY(-2.5%)}
+.photo-solid[data-source="commons"] .exterior-photo,.photo-solid[data-source="personal"] .exterior-photo{width:auto;max-width:100%;height:auto;max-height:100%;border-radius:7px;box-shadow:0 12px 50px #0005;filter:none}
+.photo-loading{position:absolute;inset:0;display:grid;place-items:center;color:#b2bec7;font-size:10px;background:#1b222888;pointer-events:none}
+.photo-inspect{position:absolute;bottom:0;left:0;display:flex;gap:8px;align-items:center;z-index:2}
+.photo-inspect>span{font-size:6px;letter-spacing:1.7px;color:#93a4b0;margin-right:3px}
+.photo-inspect button{display:flex;align-items:center;gap:6px;padding:7px 9px;background:#18222cdd;border:1px solid #4a5b65;border-radius:4px;color:#c4d3dc;font-size:8px;backdrop-filter:blur(10px)}
+.photo-inspect button:hover{background:#344b59;border-color:#86a6b6;color:#fff}
+.photo-toolbar{position:absolute;bottom:57px;left:26px;right:24px;display:flex;align-items:center;gap:12px;pointer-events:auto;z-index:6}
+.photo-identity{display:flex;align-items:center;gap:10px;flex:1;min-width:120px}
+.paint-swatch{width:25px;height:25px;border-radius:50%;background:linear-gradient(135deg,#96999d 0%,#65686b 34%,#3d4043 68%,#74777a);box-shadow:inset 0 0 0 1px #b1b3b54d,0 2px 10px #0003;flex-shrink:0}
+.photo-identity strong{display:block;color:#dde3e7;font-weight:500;font-size:12px;letter-spacing:-.1px}
+.photo-identity>div>span{display:block;color:#85949f;font-size:7px;margin-top:5px;letter-spacing:.3px}
+.photo-angle-controls{display:flex;align-items:center;gap:3px;border:1px solid #46545e;border-radius:5px;background:#1b252ddd;padding:2px}
+.photo-angle-controls button{display:grid;place-items:center;width:23px;height:25px;color:#b6c8d2}
+.photo-angle-controls select{font-family:inherit;background:transparent;color:#bdcbd4;font-size:9px;border:0;width:91px;padding:4px 2px}
+.photo-reveal,.photo-upload{display:flex;align-items:center;gap:6px;border:1px solid #526775;background:#263a48c9;padding:8px 9px;border-radius:4px;color:#c4d7e3;font-size:8px;white-space:nowrap}
+.photo-upload{background:#1e2a33b8;border-color:#41505a;padding:8px}
+.photo-reveal:hover,.photo-upload:hover{background:#3b5260;color:#fff}
+.photo-credit{position:absolute;bottom:34px;left:26px;right:24px;display:flex;gap:8px;font-size:8px;color:#85949e;pointer-events:auto}
+.photo-credit a{color:#9aafba;text-decoration:underline;text-underline-offset:2px}
+.photo-error{position:absolute;left:26px;right:24px;bottom:110px;padding:10px 14px;border:1px solid #846b54;border-radius:4px;background:#2b2823;color:#dfc2a6;font-size:10px;pointer-events:auto}
+.photo-xray .photo-stage{inset:0;display:block;pointer-events:none;overflow:hidden;cursor:default}
+.photo-xray .registered-photo{position:absolute;max-width:none;max-height:none;height:auto;object-fit:initial;transform-origin:0 0;opacity:var(--body-opacity,.24);filter:none}
+.photo-xray .registered-photo{mask-image:radial-gradient(circle at 25.3% 66.5%,transparent 0 8%,#000 8.6%),radial-gradient(circle at 79% 66%,transparent 0 8%,#000 8.6%);mask-composite:intersect}
+.photo-xray .photo-toolbar{background:#19242ce3;border:1px solid #3a4953;border-radius:5px;padding:9px 12px;bottom:57px}
+.body-opacity{display:flex;align-items:center;gap:10px;color:#9fb0bd;font-size:8px}
+.body-opacity input{width:80px;accent-color:#93bacb}
+.photo-registration-note{position:absolute;left:26px;top:169px;font-size:7px;letter-spacing:.2px;color:#90a0ac}
+.photo-reference-only .photo-stage{inset:auto auto 120px 25px;width:140px;height:85px;border:1px solid #53616b;border-radius:4px;overflow:hidden;opacity:.9}
+.photo-reference-only .exterior-photo{width:100%;height:100%;object-fit:cover;filter:none}
+@media(max-width:1300px){.photo-toolbar{gap:9px;left:22px;right:22px}.photo-identity strong{font-size:11px}.photo-identity>div>span{font-size:6px}.photo-reveal{font-size:7px;padding:8px}.photo-upload>span{display:none}.photo-inspect{gap:5px}.photo-inspect button{font-size:7px;padding:6px}.photo-stage{left:22px;right:22px}.photo-credit{left:22px}.photo-inspect>span{display:none}}
+@media(max-width:900px){.photo-stage{inset:218px 24px 112px}.photo-identity strong{font-size:13px}.photo-identity>div>span{font-size:8px}.photo-reveal{font-size:9px}.photo-inspect button{font-size:9px;padding:8px}.photo-toolbar{left:24px;right:24px}.photo-credit{font-size:7px;left:24px}.photo-registration-note{top:226px;left:24px;font-size:8px}.body-opacity{font-size:9px}.photo-inspect>span{display:block}}
+@media(max-width:600px){.photo-stage{inset:232px 17px 127px}.photo-inspect{gap:4px;bottom:-14px}.photo-inspect>span{display:none}.photo-inspect button{font-size:7px;padding:6px;gap:3px}.photo-inspect button svg{width:10px}.photo-toolbar{left:17px;right:17px;bottom:66px;gap:7px;flex-wrap:wrap}.photo-identity{min-width:145px}.photo-identity strong{font-size:11px}.photo-identity>div>span{font-size:6px}.paint-swatch{width:21px;height:21px}.photo-angle-controls{order:3}.photo-angle-controls select{font-size:8px;width:76px}.photo-angle-controls button{width:21px;height:21px}.photo-reveal{order:4;font-size:7px;padding:7px 8px}.photo-upload{padding:7px}.photo-credit{left:17px;right:17px;bottom:29px;font-size:6px;line-height:1.5;gap:6px;flex-wrap:wrap}.photo-credit>span{flex-basis:100%}.photo-registration-note{top:215px;left:17px;font-size:6px}.photo-xray .photo-toolbar{left:17px;right:17px;padding:8px 10px;bottom:65px}.body-opacity{font-size:7px;gap:6px}.body-opacity input{width:65px}.photo-reference-only .photo-stage{width:95px;height:60px;left:17px;bottom:135px}.photo-error{font-size:8px;left:17px;bottom:155px}}

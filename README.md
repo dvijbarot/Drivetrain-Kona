@@ -49,9 +49,13 @@ Numerical readouts are illustrative. The core ratio and wheel-speed relationship
 
 ## Vehicle and detailed assemblies
 
-The full-drivetrain and HTRAC views install the powertrain inside a reference-based SX2 body and chassis. Use **Drivetrain / X-ray / Bodywork**, **Chassis**, **Floor pan** and **Open hood** to control the vehicle context. Camera presets include **Wheel detail**, **Underside** and **Engine bay**. Detailed rotating wheel and brake-rotor geometry is separate from fixed calipers and suspension.
+The exterior now uses real imagery in place of the reconstructed body shell. Personal builds use Hyundai's transparent, 36-frame **2026 Ecotronic Grey (PE2)** exterior sequence. Drag, swipe, use arrow keys or select an exterior angle. The manufacturer imagery shows a US SEL Sport; Canadian Preferred AWD Trend wheels and equipment differ and the exhibit labels that scope.
 
-The body and component castings are original educational reconstructions based on public documentation. They are not scanned or manufacturer CAD. The close-up component lessons use enlarged models so internal motion remains readable.
+Use **Drivetrain / X-ray / Exterior**, **Chassis**, **Floor pan** and **Reveal engine bay** to control the vehicle context. X-ray registers the side photograph to visible wheel centres and reveals the 3D internals; packaging remains representative. This fixed side presentation avoids stretching a still photograph around a freely orbiting model. **Drivetrain** restores unrestricted mechanical rotation, zoom and pan. Camera presets include **Wheel detail**, **Underside** and **Engine bay**. Exterior component buttons open their detailed 3D assemblies.
+
+**My car** accepts a JPEG, PNG or WebP photo of your own vehicle. It stays in the browser and is never uploaded. Public distribution must build with `VITE_PUBLIC_BUILD=true`: that disables Hyundai image requests and uses the included CC BY-SA SX2 reference photo, whose paint code is unverified. OEM reference image binaries are not bundled. See ATTRIBUTION.md for the different asset rights.
+
+The chassis and component castings are original educational reconstructions based on public documentation. They are not scanned or manufacturer CAD. The close-up component lessons use enlarged models so internal motion remains readable. The old procedural body assets are retained only as editable legacy source; the app does not render them.
 
 To regenerate the source meshes (optional; Blender 4.3+ required):
 
@@ -65,7 +69,8 @@ You can rebuild one family with `blender -b --python scripts/build_models.py -- 
 ## Code organization
 
 - src/mechanics.ts — pure state calculation, speed integration, constant-length pulley/chain geometry.
-- src/Assets.tsx — GLB assemblies, physically based materials, body panels, chassis and mesh LOD selection.
+- src/Assets.tsx — GLB assemblies, physically based materials, chassis and mesh LOD selection.
+- src/PhotoExterior.tsx — manufacturer exterior spin, licensed fallback, local personal photos and exterior controls.
 - scripts/build_models.py — editable original Blender modeling recipe and baked contact occlusion.
 - scripts/compress_models.mjs — local Draco compression, decoder installation and asset manifest.
 - public/models — original GLB body, chassis, engine, IVT casting and wheel/brake assets in two LODs.
@@ -77,6 +82,7 @@ You can rebuild one family with `blender -b --python scripts/build_models.py -- 
 - tests/assets.test.ts — GLB assembly contracts, meter-scale tire geometry, shading attributes and actual LOD reduction.
 - tests/browser_smoke.py — browser interaction and viewport checks using installed Chromium / Playwright.
 - tests/vehicle_views.py — installed-vehicle controls, high-quality camera views and visual-review captures.
+- tests/photo_exterior.py — real exterior navigation, cutaway registration, local-photo privacy, responsive layouts and public-build image restrictions.
 
 React + Vite + TypeScript + Three.js + React Three Fiber + Drei + GSAP. No commercial CAD or Hyundai artwork is redistributed. Assets and open-source notices are recorded in ATTRIBUTION.md.
 
@@ -88,4 +94,4 @@ The visual revision passed 13 mechanics and asset-integrity tests and the comple
 
 ## Privacy
 
-No analytics, accounts, external runtime model loaders or server backend. Source links open only when selected. Font, HDR and models load locally. Lesson progress is stored only in localStorage in the browser.
+No analytics, accounts, external runtime model loaders or server backend. Font, HDR, licensed fallback photo and models load locally. Personal builds request manufacturer exterior reference images directly from Hyundai's image CDN; public builds disable these requests. Selected personal photos use browser-local object URLs and are never uploaded. Lesson progress is stored only in localStorage in the browser.

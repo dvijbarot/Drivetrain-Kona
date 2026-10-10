@@ -1,4 +1,4 @@
-/** Resolve locally hosted assets for root sites and GitHub Pages project paths. */
+/** Resolve local assets for both root hosting and a GitHub Pages project path. */
 export function assetPath(path: string): string {
   return import.meta.env.BASE_URL + path.replace(/^\/+/, '');
 }

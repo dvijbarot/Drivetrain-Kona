@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { assetPath } from './assetPath';
@@ -55,7 +55,7 @@ export function ModelAsset({url,names,opacity=1,selected=false,clip,position,sca
 }){
   const quality=useContext(AssetQuality);
   const assetURL=assetPath(quality==='Low'?url.replace('.glb','-low.glb'):url);
-  const {scene}=useGLTF(assetURL,assetPath('draco/'));
+  const {scene}=useGLTF(assetURL,assetPath('/draco/'));
   const group=useRef<THREE.Group>(null!);
   const {object,materials}=useMemo(()=>{
     const object=scene.clone(true),materials:THREE.MeshPhysicalMaterial[]=[];
@@ -89,27 +89,6 @@ export function ModelAsset({url,names,opacity=1,selected=false,clip,position,sca
     if(clip&&group.current){group.current.updateWorldMatrix(true,false);plane.set(new THREE.Vector3(clip[0],clip[1],clip[2]),clip[3]);plane.applyMatrix4(group.current.matrixWorld);}
   });
   return <group ref={group} position={position} scale={scale}><primitive object={object}/></group>;
-}
-
-export function VehicleBody({mode,hoodOpen,explode,onSelect}:{mode:BodyMode;hoodOpen:boolean;explode:number;onSelect:(id:string)=>void}){
-  const shell=useRef<THREE.Group>(null!),hood=useRef<THREE.Group>(null!);
-  const invalidate=useThree(state=>state.invalidate);
-  useFrame((_,dt)=>{
-    shell.current.position.y=THREE.MathUtils.damp(shell.current.position.y,explode*1.3,8,dt);
-    hood.current.rotation.x=THREE.MathUtils.damp(hood.current.rotation.x,hoodOpen?.98:0,7,dt);
-    if(Math.abs(shell.current.position.y-explode*1.3)>.0001||Math.abs(hood.current.rotation.x-(hoodOpen?.98:0))>.0001)invalidate();
-  });
-  return <group ref={shell} visible={mode!=='Hidden'} onClick={e=>{e.stopPropagation();onSelect('body')}}>
-    <ModelAsset url="/models/kona-sx2-body.glb" names={['body','roof','trim','light']} opacity={mode==='Ghost'?.10:1}/>
-    <ModelAsset url="/models/kona-sx2-body.glb" names={['glass']} opacity={mode==='Ghost'?.05:.60}/>
-    {mode==='Solid'&&<ModelAsset url="/models/kona-sx2-body.glb" names={['interior']} opacity={1}/>}
-    {mode==='Solid'&&[-1,1].flatMap(side=>[-1.33,1.33].map(z=><mesh key={side+':'+z} position={[side*.765,.347,z]} rotation={[0,0,Math.PI/2]}>
-      <cylinderGeometry args={[.425,.425,.30,64,1,true,0,Math.PI]}/><meshStandardMaterial color="#151719" roughness={.92} side={THREE.DoubleSide}/>
-    </mesh>))}
-    <group ref={hood} position={[0,1.075,-.9]}>
-      <group position={[0,-1.075,.9]}><ModelAsset url="/models/kona-sx2-body.glb" names={['hood']} opacity={mode==='Ghost'?.1:1}/></group>
-    </group>
-  </group>;
 }
 
 export function Chassis({floor=true,bay=true,opacity=1}:{floor?:boolean;bay?:boolean;opacity?:number}){
