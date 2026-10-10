@@ -1,0 +1,146 @@
+[
+  {
+    "file": "engine-castings-low.glb",
+    "bytes": 372616,
+    "triangles": 46001,
+    "assemblies": [
+      "block",
+      "block_cut",
+      "head",
+      "cover",
+      "pan",
+      "timing",
+      "intake",
+      "exhaust",
+      "ancillary"
+    ],
+    "lod": "Low",
+    "compression": "Draco"
+  },
+  {
+    "file": "engine-castings.glb",
+    "bytes": 584260,
+    "triangles": 95992,
+    "assemblies": [
+      "block",
+      "block_cut",
+      "head",
+      "cover",
+      "pan",
+      "timing",
+      "intake",
+      "exhaust",
+      "ancillary"
+    ],
+    "lod": "High",
+    "compression": "Draco"
+  },
+  {
+    "file": "ivt-casting-low.glb",
+    "bytes": 179400,
+    "triangles": 24324,
+    "assemblies": [
+      "case",
+      "pan",
+      "bell"
+    ],
+    "lod": "Low",
+    "compression": "Draco"
+  },
+  {
+    "file": "ivt-casting.glb",
+    "bytes": 294676,
+    "triangles": 50676,
+    "assemblies": [
+      "case",
+      "pan",
+      "bell"
+    ],
+    "lod": "High",
+    "compression": "Draco"
+  },
+  {
+    "file": "kona-sx2-body-low.glb",
+    "bytes": 305212,
+    "triangles": 49370,
+    "assemblies": [
+      "hood",
+      "roof",
+      "glass",
+      "body",
+      "trim",
+      "light",
+      "interior"
+    ],
+    "lod": "Low",
+    "compression": "Draco"
+  },
+  {
+    "file": "kona-sx2-body.glb",
+    "bytes": 398204,
+    "triangles": 76438,
+    "assemblies": [
+      "hood",
+      "roof",
+      "glass",
+      "body",
+      "trim",
+      "light",
+      "interior"
+    ],
+    "lod": "High",
+    "compression": "Draco"
+  },
+  {
+    "file": "kona-sx2-chassis-low.glb",
+    "bytes": 220132,
+    "triangles": 27447,
+    "assemblies": [
+      "floor",
+      "frame",
+      "suspension",
+      "utilities",
+      "bay"
+    ],
+    "lod": "Low",
+    "compression": "Draco"
+  },
+  {
+    "file": "kona-sx2-chassis.glb",
+    "bytes": 348892,
+    "triangles": 57860,
+    "assemblies": [
+      "floor",
+      "frame",
+      "suspension",
+      "utilities",
+      "bay"
+    ],
+    "lod": "High",
+    "compression": "Draco"
+  },
+  {
+    "file": "wheel-18-low.glb",
+    "bytes": 337676,
+    "triangles": 36652,
+    "assemblies": [
+      "wheel",
+      "rotor",
+      "caliper"
+    ],
+    "lod": "Low",
+    "compression": "Draco"
+  },
+  {
+    "file": "wheel-18.glb",
+    "bytes": 558852,
+    "triangles": 80586,
+    "assemblies": [
+      "wheel",
+      "rotor",
+      "caliper"
+    ],
+    "lod": "High",
+    "compression": "Draco"
+  }
+]

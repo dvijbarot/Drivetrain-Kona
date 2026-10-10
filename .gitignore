@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.tsbuildinfo
+qa-*.png
+__pycache__/
+
+*.zip
+*.tar.gz
+.openai/
