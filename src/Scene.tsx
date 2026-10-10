@@ -320,7 +320,23 @@ function CameraRig(){
  if(c.cameraView==='Engine bay'){target.set(0,.66,-1.38);pos.set(-1.4,2.0,-2.4)}
  if(c.photoRegistered){target.set(0,.75,0);pos.set(-7.4,1.65,-.10)}
  if(c.explode>.5&&c.focus!=='overview'&&c.focus!=='awd')pos.add(new THREE.Vector3(1.5,1,1.5));
- const aspect=size.width/size.height,padding=Math.max(1,(c.focus==='overview'||c.focus==='awd'?1.35:1.3)/aspect);pos.sub(target).multiplyScalar(padding).add(target);
+ const aspect=size.width/size.height;
+ const padding=Math.max(1,(vehicle?1.35:1.3)/aspect);
+ const perspective=c.cameraView==='Perspective'&&!c.photoRegistered;
+ // Fill the larger exhibit with the mechanism, retaining more clearance during explosion.
+ const zoom=perspective?(vehicle?(c.explode>.5?.72:(size.width<=600?.68:.58)):(aspect<1?(c.explode>.5?.80:(c.focus==='ivt'?.70:.58)):1)):1;
+ pos.sub(target).multiplyScalar(padding*zoom).add(target);
+ if(perspective&&c.focus==='overview'){const shift=size.width<=600?.12:.30;pos.y-=shift;target.y-=shift;}
+ if(perspective&&aspect<1&&!vehicle){
+  // Reserve the top controls on phones; keep the enlarged assembly in the clear working area.
+  const direction=target.clone().sub(pos).normalize();
+  const right=direction.clone().cross(new THREE.Vector3(0,1,0)).normalize();
+  const up=right.cross(direction).normalize();
+  const halfHeight=pos.distanceTo(target)*Math.tan(THREE.MathUtils.degToRad(38/2));
+  const offset=up.multiplyScalar(halfHeight*140/size.height);
+  target.add(offset);pos.add(offset);
+ }
+
  const start=camera.position.clone(),startTarget=controls.current?.target.clone()||new THREE.Vector3(0,.15,1.1);
  const state={progress:0};
  gl.domElement.dataset.cameraSettled='false';gl.domElement.dataset.cameraPreset=c.cameraView;
@@ -362,14 +378,14 @@ function PhotoRegistration(){
 }
 function World(){
  const c=useContext(Ctx),vehicle=c.focus==='overview'||c.focus==='awd';
- return <><color attach="background" args={['#161c21']}/><fog attach="fog" args={['#161c21',18,45]}/>
- <ambientLight intensity={.12}/><hemisphereLight args={['#dce9f0','#34383b',.45]}/>
+ return <><color attach="background" args={['#111111']}/><fog attach="fog" args={['#111111',18,45]}/>
+ <ambientLight intensity={.12}/><hemisphereLight args={['#f2efe9','#303030',.45]}/>
  <directionalLight position={[-3,7,-5]} intensity={2.0} color="#f0f3f7" castShadow shadow-mapSize={c.quality==='Low'?512:2048} shadow-bias={-.0002} shadow-normalBias={.025} shadow-camera-left={-5} shadow-camera-right={5} shadow-camera-top={5} shadow-camera-bottom={-5}/>
- <rectAreaLight width={5} height={3} position={[4,4,1]} rotation={[-Math.PI/4,Math.PI/2,0]} intensity={5} color="#d3e0e7"/>
- <directionalLight position={[-5,2,4]} intensity={1.1} color="#c8d4dc"/>
+ <rectAreaLight width={5} height={3} position={[4,4,1]} rotation={[-Math.PI/4,Math.PI/2,0]} intensity={5} color="#eee9e1"/>
+ <directionalLight position={[-5,2,4]} intensity={1.1} color="#e1e1de"/>
  <Suspense fallback={null}><Environment files={assetPath(c.quality==='Low'?'/studio-low.hdr':'/studio.hdr')} environmentIntensity={.86} environmentRotation={[0,.65,0]}/></Suspense>
- <gridHelper visible={c.cameraView!=='Underside'} args={[30,60,'#303a42','#232c34']} position={[0,vehicle?-.008:-.74,0]}/>
- <mesh visible={c.cameraView!=='Underside'} rotation={[-Math.PI/2,0,0]} position={[0,vehicle?-.01:-.75,0]} receiveShadow><planeGeometry args={[100,100]}/><meshStandardMaterial color="#161c21" roughness={.84} metalness={.1}/></mesh>
+ <gridHelper visible={c.cameraView!=='Underside'} args={[30,60,'#303030','#232323']} position={[0,vehicle?-.008:-.74,0]}/>
+ <mesh visible={c.cameraView!=='Underside'} rotation={[-Math.PI/2,0,0]} position={[0,vehicle?-.01:-.75,0]} receiveShadow><planeGeometry args={[100,100]}/><meshStandardMaterial color="#111111" roughness={.84} metalness={.1}/></mesh>
  <AssetQuality.Provider value={c.quality}><Suspense fallback={null}>
  {vehicle&&c.chassis&&<Part id="chassis"><Chassis floor={c.floor} bay={c.focus==='overview'} opacity={c.dim&&c.selected!=='chassis'?.28:1}/></Part>}
  <Engine/><Converter/><IVT/><AWD/><Power/>

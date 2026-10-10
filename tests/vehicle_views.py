@@ -50,9 +50,11 @@ with sync_playwright() as p:
         print("High graphics: "+preset,flush=True)
 
     camera("Wheel detail")
+    page.get_by_role("button",name="Components",exact=True).click()
     page.locator(".component-row").filter(has_text="Primary / input pulley").click(force=True)
     assert page.get_by_label("Camera preset",exact=True).input_value()=="Perspective"
     assert page.get_by_role("button",name="04 IVT",exact=True).get_attribute("class")=="active"
+    page.get_by_role("button",name="Close inspector",exact=True).click()
     page.get_by_role("button",name="Simulator",exact=True).click(force=True)
     page.get_by_role("button",name="Red light",exact=True).click(force=True)
     page.get_by_role("button",name="Pause animation",exact=True).click(force=True)

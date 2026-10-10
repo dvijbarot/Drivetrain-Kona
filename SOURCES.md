@@ -102,3 +102,11 @@ Reused assets: Poly Haven CC0 studio HDR and Inter OFL font. See ATTRIBUTION.md 
 - [Alexander-93's SX2 photograph](https://commons.wikimedia.org/wiki/File:Hyundai_Kona_(SX2)_1X7A1646.jpg): Wikimedia image metadata confirms author, date and CC BY-SA 4.0. Its paint code is **unconfirmed**; it is not labeled as confirmed Ecotronic Grey. No recolouring or background editing was applied.
 - Personal manufacturer references stay on Hyundai's image host. **Public distribution uses `VITE_PUBLIC_BUILD=true`, which substitutes the licensed Commons photograph and does not request OEM images.** The user may select their own car photo locally in either build. Asset rights and terms are recorded in ATTRIBUTION.md.
 - The original procedural body GLBs and Blender recipe remain as legacy source assets, but the reconstructed shell is no longer rendered. Engine-bay, wheel and underbody views use the interactive mechanical model. “Reveal engine bay” switches into that view; no opening hood is falsely animated on a still image.
+
+
+## Recorded engine audio and playback assumptions
+
+- **Confirmed at source scope:** KVV Audio identifies the [Hyundai Kona sound pack](https://freesound.org/people/KVV_Audio/packs/45205/) as recordings of an internal-combustion Kona. [Idle](https://freesound.org/people/KVV_Audio/sounds/845611/), [2,000 RPM](https://freesound.org/people/KVV_Audio/sounds/845607/) and [3,000 RPM](https://freesound.org/people/KVV_Audio/sounds/845609/) are source recording titles, under CC BY 4.0. They were published on 17 February 2026 and checked on 10 October 2026.
+- **Unverified:** the recorded Kona's model year, engine displacement, powertrain variant and market. These recordings are not presented as authenticated 2026 Canadian 2.0L engine audio.
+- **Illustrative:** an estimated 850 RPM anchor for idle; equal-power mixing across the recorded bands; playback-rate scaling limited to 0.65–1.75; throttle-dependent volume and filtering. Above the highest sampled band, the sound remains approximate. No synthesized engine oscillator is used.
+- **Adapted asset:** filtered, normalized, loop-crossfaded WAVs from Freesound's public high-quality MP3 previews. Sound downloads only after user opt-in. See [audio README](public/audio/README.md) for exact titles, source links, license and processing measurements.

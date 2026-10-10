@@ -40,12 +40,14 @@ Open http://localhost:4173/Drivetrain-Kona/. The GitHub Pages site is publicly r
 
 ## Explore
 
+The mechanical scene fills the main page width. **Chapters / Components** and **Inspect** open overlay drawers, so explanatory panels do not permanently squeeze the 3D view. **Focus view** expands the scene across the viewport; **Exit focus** or Escape returns to the normal controls. Lessons use a compact narration dock with **Read full explanation** for more space. The default view shows the drivetrain; the real exterior remains available through **Exterior**.
+
 - **Learn:** 30 chapters, three explanatory stages per chapter, Previous / Next / Replay and browser-local completion tracking.
 - **Explore:** focused assemblies, opaque / transparent / cutaway / exploded views, selected-part explanations at three depths, isolate, hide / show, camera reset and angle presets.
 - **Simulator:** throttle, brake, P/R/N/D, speed, Normal/Sport/Snow, road grip, steering, manual virtual steps, automatic or custom ratio, optional requested RPM and optional speed evolution.
 - **Power flow:** connected torque path, playback speeds down to 0.05×, timeline and individual frame steps.
 - **Compare:** fixed automatic gearsets, continuously variable pulleys and software-controlled IVT steps.
-- **Settings:** graphics quality, labels, torque paths, numeric readouts, selection dimming and optional synthesized engine sound.
+- **Settings:** graphics quality, labels, torque paths, numeric readouts, selection dimming and optional recorded engine sound.
 
 Mouse: drag to orbit, scroll to zoom, right-drag to pan. Touch: one-finger orbit, pinch zoom, two-finger pan. Space pauses/resumes; Escape closes dialogs and isolation. Mobile has separate Chapters/Components and Inspect drawers.
 
@@ -80,13 +82,18 @@ You can rebuild one family with `blender -b --python scripts/build_models.py -- 
 - public/models — original GLB body, chassis, engine, IVT casting and wheel/brake assets in two LODs.
 - src/Scene.tsx — original parameterized parts, instanced links / particles, precise angular relationships, axial explosion and camera transitions.
 - src/content.ts — component descriptions, 30 lessons, scenario inputs and source links.
-- src/App.tsx — learning state, simulator, inspector, accessibility controls, audio and comparison.
+- src/App.tsx — learning state, simulator, inspector drawers, focus mode, accessibility controls and comparison.
+- src/engineAudio.ts — on-demand recorded audio, RPM band mixing, smoothed playback and lifecycle cleanup.
+- public/audio — licensed engine-loop WAVs, measurement manifest and source attribution.
 - src/styles.css — desktop exhibit and touch layouts.
 - tests/mechanics.test.ts — mechanical invariants and lesson validation.
 - tests/assets.test.ts — GLB assembly contracts, meter-scale tire geometry, shading attributes and actual LOD reduction.
 - tests/browser_smoke.py — browser interaction and viewport checks using installed Chromium / Playwright.
 - tests/vehicle_views.py — installed-vehicle controls, high-quality camera views and visual-review captures.
 - tests/photo_exterior.py — real exterior navigation, cutaway registration, local-photo privacy, responsive layouts and public-build image restrictions.
+- tests/presentation_audio.py — dominant canvas sizing, drawer access, text contrast, focus mode and recorded-audio playback/pause/mute.
+
+Optional audio uses licensed real Hyundai Kona recordings at idle, 2,000 and 3,000 RPM by KVV Audio, with smooth playback blending. Sound stays muted until enabled, fades on pause/mute and is silent in background tabs. The recorded vehicle year and engine variant are unverified. See `public/audio/README.md` for sources, CC BY 4.0 credit and adaptation details.
 
 React + Vite + TypeScript + Three.js + React Three Fiber + Drei + GSAP. No commercial CAD or Hyundai artwork is redistributed. Assets and open-source notices are recorded in ATTRIBUTION.md.
 
@@ -95,6 +102,8 @@ React + Vite + TypeScript + Three.js + React Three Fiber + Drei + GSAP. No comme
 Production TypeScript / Vite build; pure mechanics tests; Chromium interaction checks at desktop, iPad and phone viewports. Software WebGL is used in automated checks. Device-specific mobile GPU performance and actual Safari behavior require testing on those devices.
 
 The visual revision passed 13 mechanics and asset-integrity tests and the complete 30-chapter browser suite at 1440×1000, 834×1112 and 390×844. To reproduce the focused vehicle captures, run `KONA_TEST_URL=http://127.0.0.1:4173/ python tests/vehicle_views.py` against the production preview. Captures and result files go to `/tmp/kona-qa`.
+
+The canvas and audio checks cover full-width framing, desktop and touch drawers, focus view, text contrast, actual decoded recording output, RPM response, and silence on pause/mute. Run `KONA_TEST_URL=http://127.0.0.1:4175/Drivetrain-Kona/ python tests/presentation_audio.py` against a project-path production preview. The standard 1920×1080 scene occupies 67% of the viewport height; focus view occupies 88%.
 
 ## Privacy
 

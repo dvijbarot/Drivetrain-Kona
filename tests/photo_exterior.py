@@ -25,7 +25,7 @@ with sync_playwright() as p:
         page.locator('.exterior-photo').evaluate('(el)=>el.decode()')
     def body(mode):
         page.get_by_role('button', name='Body '+mode, exact=True).click(force=True)
-    pause(); image_ready()
+    body('solid'); pause(); image_ready()
     assert page.locator('.photo-exterior').get_attribute('data-source') == ('commons' if PUBLIC else 'hyundai')
     assert page.locator('.photo-exterior').is_visible()
     page.screenshot(path=str(OUT/('photo-public-desktop.png' if PUBLIC else 'photo-exterior-desktop.png')))
@@ -70,10 +70,12 @@ with sync_playwright() as p:
     page.get_by_role('button', name='Converter', exact=True).click(force=True);pause()
     assert not page.locator('.photo-exterior').is_visible()
     assert page.locator('.part-heading h2').inner_text() == 'Torque converter'
+    page.get_by_role('button', name='Close inspector', exact=True).click()
     page.get_by_role('button', name='01 Full drivetrain', exact=True).click(force=True);pause()
     body('solid');image_ready()
     assert page.locator('.photo-exterior').get_attribute('data-source') == 'personal'
     page.get_by_role('button', name='Restore reference photo', exact=True).click();image_ready()
+    page.get_by_role('button', name='Components', exact=True).click()
     page.locator('.component-row').filter(has_text='Kona exterior reference').click(force=True)
     page.get_by_role('button',name='Isolate',exact=True).click(force=True)
     assert page.locator('.photo-exterior').is_visible(), 'Exterior isolation must retain the photo'
@@ -82,9 +84,11 @@ with sync_playwright() as p:
     page.get_by_role('button',name='Show',exact=True).click(force=True)
     assert page.locator('.photo-exterior').is_visible()
     page.get_by_role('button',name='Show all',exact=True).click(force=True)
+    page.get_by_role('button', name='Close inspector', exact=True).click()
     page.locator('.photo-inspect').get_by_role('button',name='IVT',exact=True).click(force=True)
     assert page.locator('.part-heading h2').inner_text() == 'Primary / input pulley'
     assert not page.locator('.photo-exterior').is_visible()
+    page.get_by_role('button', name='Close inspector', exact=True).click()
     page.get_by_role('button',name='01 Full drivetrain',exact=True).click(force=True);pause()
     print('Local photo privacy, isolation and component inspection checked', flush=True)
 

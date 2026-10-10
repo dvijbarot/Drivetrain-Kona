@@ -1,0 +1,41 @@
+[
+  {
+    "file": "kona-idle.wav",
+    "source_id": 845611,
+    "duration": 5.88,
+    "sample_rate": 48000,
+    "channels": 2,
+    "sampled_rpm": 850,
+    "rpm_status": "estimated idle anchor",
+    "rms_dbfs": -21.0,
+    "peak_dbfs": -5.732338923543506,
+    "boundary_difference": 0.0349970661226555,
+    "sha256": "81b58ac6f07ff1ca63b4bb7332912f044fd47f70646d53a4583ddbec6bdd4f42"
+  },
+  {
+    "file": "kona-2000rpm.wav",
+    "source_id": 845607,
+    "duration": 5.88,
+    "sample_rate": 48000,
+    "channels": 2,
+    "sampled_rpm": 2000,
+    "rpm_status": "source recording title",
+    "rms_dbfs": -21.0,
+    "peak_dbfs": -8.977487648829431,
+    "boundary_difference": 0.004386904306491454,
+    "sha256": "e9a9900681bb446e0f0b9e390a6a6dade71c7ce4e120e1b2256ad1f16f25a5c4"
+  },
+  {
+    "file": "kona-3000rpm.wav",
+    "source_id": 845609,
+    "duration": 5.88,
+    "sample_rate": 48000,
+    "channels": 2,
+    "sampled_rpm": 3000,
+    "rpm_status": "source recording title",
+    "rms_dbfs": -21.0,
+    "peak_dbfs": -8.921836234297421,
+    "boundary_difference": 0.008242602298501692,
+    "sha256": "98b0caea409cf02104f2d12fac68a94d23ebd4072c8b5405eb341eec1808a8b5"
+  }
+]

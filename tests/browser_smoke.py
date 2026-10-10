@@ -34,7 +34,14 @@ with sync_playwright() as p:
     page.screenshot(path=str(OUT/"desktop.png"))
     print("Desktop 3D started", flush=True)
 
+    # Keep software-WebGL interaction checks responsive; visual captures cover High.
+    page.get_by_role("button",name="Settings",exact=True).click()
+    page.get_by_label("Graphics quality",exact=True).select_option("Low")
+    page.get_by_role("button",name="Close dialog",exact=True).click()
+    page.locator(".asset-loading").wait_for(state="hidden",timeout=60000)
+
     for chapter in range(30):
+        page.get_by_role("button",name="Chapters",exact=True).click()
         page.locator(".chapter").nth(chapter).click(force=True)
         page.get_by_role("button",name="Pause animation",exact=True).click(force=True)
         page.wait_for_timeout(100)
@@ -46,14 +53,20 @@ with sync_playwright() as p:
     page.get_by_role("button",name="Replay",exact=True).click()
     print("All 30 chapters and timeline checked", flush=True)
 
+    def inspect_text(selector):
+        page.get_by_role("button",name="Inspect",exact=True).click()
+        text = page.locator(selector).inner_text()
+        page.get_by_role("button",name="Close inspector",exact=True).click()
+        return text
+
     page.get_by_role("button",name="Simulator",exact=True).click()
     page.get_by_role("button",name="Red light",exact=True).click()
     check("0" in page.locator(".instruments>div").nth(1).inner_text(),"Turbine stalls at red light")
-    check("Stall / launch" in page.locator(".state-card").inner_text(),"Stall explanation shown")
+    check("Stall / launch" in inspect_text(".state-card"),"Stall explanation shown")
     page.get_by_role("button",name="Cruise",exact=True).click()
-    check("Lock-up engaged" in page.locator(".state-card").inner_text(),"Cruise locks converter")
+    check("Lock-up engaged" in inspect_text(".state-card"),"Cruise locks converter")
     page.get_by_role("button",name="Front slip",exact=True).click()
-    check("Elevated" in page.locator(".awd-card").inner_text(),"Low grip raises rear demand")
+    check("Elevated" in inspect_text(".awd-card"),"Low grip raises rear demand")
     page.get_by_role("button",name="Cornering",exact=True).click()
     page.locator(".bench-details summary").click()
     check("Front L / R:" in page.locator(".bench-details").inner_text(),"Wheel readouts available")
@@ -67,14 +80,15 @@ with sync_playwright() as p:
     page.get_by_role("button",name="Request higher virtual ratio",exact=True).click()
     check("M" in page.locator(".manual-steps").inner_text(),"Manual virtual ratio request works")
     page.get_by_role("button",name="P",exact=True).click()
-    check("Range disconnected" in page.locator(".state-card").inner_text(),"Park disconnects powered path")
+    check("Range disconnected" in inspect_text(".state-card"),"Park disconnects powered path")
     page.get_by_role("button",name="N",exact=True).click()
-    check("Range disconnected" in page.locator(".state-card").inner_text(),"Neutral disconnects powered path")
+    check("Range disconnected" in inspect_text(".state-card"),"Neutral disconnects powered path")
     page.get_by_role("button",name="Reverse",exact=True).click()
     check(page.locator(".gear-selector button.active").inner_text()=="R","Reverse scenario sets range")
     print("Simulator scenarios, inputs and manual control checked", flush=True)
 
     page.get_by_role("button",name="Explore",exact=True).click()
+    page.get_by_role("button",name="Pause animation",exact=True).click()
     for focus in ["02 Engine","03 Torque converter","04 IVT","05 HTRAC AWD"]:
         page.get_by_role("button",name=focus,exact=True).click()
         for view in ["Exterior","Transparent","Exploded","Cutaway"]:
@@ -87,6 +101,7 @@ with sync_playwright() as p:
     page.get_by_role("button",name="Exploded",exact=True).click()
     page.wait_for_timeout(1400)
     page.screenshot(path=str(OUT/"exploded.png"))
+    page.get_by_role("button",name="Components",exact=True).click()
     page.locator(".component-row").filter(has_text="Turbine").click()
     page.get_by_role("button",name="Technical",exact=True).click()
     check("speed ratio" in page.locator(".part-explanation").inner_text().lower(),"Technical explanation works")
@@ -94,7 +109,8 @@ with sync_playwright() as p:
     check(page.locator(".isolate-banner").is_visible(),"Isolation is visibly indicated")
     page.get_by_role("button",name="Hide",exact=True).click()
     page.get_by_role("button",name="Show",exact=True).click()
-    page.get_by_role("button",name="Restore assembly",exact=True).first.click()
+    page.locator(".inspector").get_by_role("button",name="Restore assembly",exact=True).click()
+    page.get_by_role("button",name="Close inspector",exact=True).click()
     page.get_by_role("button",name="Reset camera",exact=True).click()
     page.get_by_role("button",name="Toggle component labels",exact=True).click()
     page.get_by_role("button",name="Toggle component labels",exact=True).click()
@@ -135,7 +151,9 @@ with sync_playwright() as p:
         mobile.get_by_role("button",name="Close inspector",exact=True).click()
         mobile.get_by_role("button",name="Simulator",exact=True).click()
         mobile.get_by_role("button",name="Cruise",exact=True).click()
+        mobile.get_by_role("button",name="Inspect",exact=True).click()
         check("Lock-up engaged" in mobile.locator(".state-card").inner_text(),name+" simulator reacts")
+        mobile.get_by_role("button",name="Close inspector",exact=True).click()
         mobile.screenshot(path=str(OUT/(name+".png")),full_page=True)
         print(name+" touch layout checked",flush=True)
         mobile.close()
