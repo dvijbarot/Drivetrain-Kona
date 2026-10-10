@@ -28,11 +28,11 @@ The public GitHub Pages copy deploys automatically when `main` changes. The work
 For a local project-path build:
 
 ```sh
-npm run build -- --base=/kona-drivetrain-lab/
-npm run preview -- --port 4173
+npm run build -- --base=/Drivetrain-Kona/
+npm run preview -- --port 4173 --base=/Drivetrain-Kona/
 ```
 
-Open http://localhost:4173/kona-drivetrain-lab/. The GitHub Pages site is publicly readable and requires no ChatGPT login. Original private-hosting identifiers and credentials are excluded from this repository.
+Open http://localhost:4173/Drivetrain-Kona/. The GitHub Pages site is publicly readable and requires no ChatGPT login. Original private-hosting identifiers and credentials are excluded from this repository.
 
 ## Explore
 
