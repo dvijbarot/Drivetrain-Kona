@@ -625,3 +625,160 @@ select option { background: #252524; }
   .turn, .counterturn { animation: none; }
   * { scroll-behavior: auto; }
 }
+
+/* Light gallery theme: warm white surfaces, ink typography and quiet bronze accents. */
+:root {
+  color: #202321;
+  background: #f3f1ec;
+  color-scheme: light;
+  font-size: 15px;
+  --surface: #f8f7f3;
+  --panel: #fffefa;
+  --border: #d8d5cc;
+  --muted: #656b67;
+  --accent: #996927;
+  --accent-soft: #f1e5d2;
+  --blue: #287b91;
+  --orange: #b87524;
+  --green: #467a3c;
+  --purple: #735695;
+}
+body { background: #f3f1ec; }
+button { font-weight: 520; }
+select { background: #fff; border-color: #c9c6bd; color: #292c29; }
+select option { background: #fff; }
+::-webkit-scrollbar-thumb { background: #c6c3ba; }
+.header { height: 66px; background: #fffefa; border-color: var(--border); }
+.brand { color: #171a18; font-size: 22px; letter-spacing: -.2px; font-weight: 720; }
+.brand-light { color: #6c706c; font-weight: 450; }
+.brand-mark { border-color: #575d58; }
+.brand-mark i { background: #575d58; }
+.vehicle strong { font-size: 13px; color: #2b2f2c; }
+.vehicle>span { color: #727770; font-size: 10px; font-weight: 600; }
+.private-pill { color: #485049; background: #faf9f5; border-color: #d2d0c8; }
+.icon-button { color: #535955; }
+.icon-button:hover { color: #171a18; background: #eceae4; }
+.icon-button.selected { color: #85591f; background: #f1e5d2; }
+.mode-nav { height: 52px; background: #f8f7f3; }
+.mode-nav button { color: #555b56; font-size: 13px; font-weight: 590; }
+.mode-nav button:hover { color: #171a18; }
+.mode-nav button.active { color: #85591f; }
+.nav-count { color: #744d19; background: #eee3d2; }
+.nav-hint, .toolbar-hint { color: #6f746f; }
+.exhibit { background: #f1f0eb; }
+.exhibit-toolbar { min-height: 52px; background: #fffefa; }
+.panel-toggle, .focus-button { min-height: 36px; padding: 8px 13px; font-size: 13px; color: #3d433e; background: #f6f5f0; border-color: #cecbc2; border-radius: 8px; }
+.panel-toggle:hover, .panel-toggle.active { background: #ede8de; color: #191c1a; border-color: #ae9874; }
+.focus-button { color: #80551f; background: #f5ebdc; border-color: #c7aa7e; }
+.focus-button:hover { background: #eddfca; }
+.focus-tabs { height: 49px; min-height: 49px; background: #faf9f5; }
+.focus-tabs button { color: #5b615c; font-size: 13px; font-weight: 550; }
+.focus-tabs button>span { color: #888c86; }
+.focus-tabs button.active { color: #202421; }
+.scene-title h1 { color: #202421; font-size: clamp(28px, 2.35vw, 38px); font-weight: 630; letter-spacing: -1.15px; text-shadow: 0 1px 10px #fff; }
+.scene-title p { color: #555b56; font-size: 14px; text-shadow: 0 1px 6px #fff; }
+.eyebrow { color: #666c67; font-weight: 650; }
+.scene-title .eyebrow i { background: #8c918c; }
+.scene-status { color: #4e554f; font-size: 11px; }
+.scene-status .rate { color: #363b37; background: #e7e5de; }
+.scene-views { background: #fffefaf2; border-color: #cbc8bf; border-radius: 9px; box-shadow: 0 8px 28px #55513f1c; }
+.scene-views button { color: #555b56; font-size: 12px; border-radius: 6px; }
+.scene-views button.active { color: #6e491b; background: #eee3d2; }
+.scene-views button:hover { color: #202421; background: #f0eee8; }
+.camera-tools { background: #fffefaf2; border-color: #cbc8bf; border-radius: 9px; box-shadow: 0 8px 28px #55513f14; }
+.camera-tools>select { color: #343935; background: #fffefa; font-size: 12px; }
+.part-label { color: #242824; background: #fffefaf2; border-color: #c7c4bb; box-shadow: 0 5px 16px #504a3820; font-size: 12px; }
+.part-label.selected { color: #5f401b; background: #f0e4d2; }
+.scene-legend span, .orbit-hint { color: #5d635e; font-size: 11px; }
+.radius-overlay, .asset-loading { color: #333833; background: #fffefaf2; border-color: #c9c5ba; box-shadow: 0 6px 24px #3d382517; }
+.radius-overlay>span, .radius-overlay small, .radius-overlay p { color: #626862; }
+.radius-overlay strong { color: #246c7e; }
+.scene-loading, .scene-error { color: #555b56; }
+.photo-solid { background: radial-gradient(ellipse at 52% 56%, #ffffff 0%, #f2f1ed 58%, #e9e7e1 100%); }
+.photo-loading { color: #535a54; background: #f4f2edcc; }
+.photo-inspect>span, .photo-identity>div>span, .photo-credit { color: #626862; }
+.photo-inspect button, .photo-angle-controls, .photo-reveal, .photo-upload { color: #493a26; background: #fffdf8ed; border-color: #c6b18e; box-shadow: 0 5px 16px #62533716; }
+.photo-inspect button:hover, .photo-reveal:hover, .photo-upload:hover { color: #3e2b12; background: #f1e4d1; border-color: #a8834e; }
+.photo-angle-controls select { color: #493a26; }
+.photo-identity strong { color: #222622; font-size: 15px; }
+.photo-credit a { color: #76501d; }
+.photo-xray .photo-toolbar { background: #fffefaf0; border-color: #cbc5b7; }
+.body-opacity, .photo-registration-note { color: #555c56; }
+.photo-error { color: #7d3d2d; background: #fff4ef; border-color: #d7a797; }
+.vehicle-controls { background: #faf9f5; }
+.body-switch { width: 275px; background: #eeece6; border-color: #cbc8bf; border-radius: 8px; }
+.body-switch button { color: #555b56; font-size: 12px; padding: 7px 9px; border-radius: 6px; }
+.body-switch button.active { color: #5f4019; background: #fff; box-shadow: 0 2px 8px #51472f18; }
+.vehicle-controls>label { color: #444a45; font-size: 12px; }
+.instruments { min-height: 64px; background: #fffefa; }
+.instruments>div>span, .sim-tag { color: #666c67; }
+.instruments strong { color: #202421; font-size: 23px; }
+.instruments small { color: #666c67; }
+.playback { height: 50px; min-height: 50px; background: #f8f7f3; }
+.play-button { color: #fff; background: #966726; }
+.play-button:hover { background: #7e541d; }
+.playback select { color: #343935; background: #fff; border-color: #cbc8bf; }
+.time-label { color: #343935; }
+.time-label i, .frame-button { color: #6b706b; }
+.lesson-player, .explore-panel, .simulator-panel { background: #fffefa; }
+.lesson-text .eyebrow { color: #393e3a; }
+.lesson-text p { color: #424843; font-size: 16px; }
+.text-button { color: #454b46; }
+.next-button { color: #fff; background: #8d6024; border-color: #8d6024; }
+.next-button:hover { background: #744c19; }
+.footer { color: #676d68; background: #efede7; }
+.footer b { color: #76664e; }
+.sidebar, .inspector { border-color: #cbc8bf; box-shadow: 0 0 70px #443d2a26 !important; }
+.panel-backdrop { background: #453f3266; }
+.lesson-summary h2, .part-heading h2 { color: #202421; }
+.lesson-summary p, .chapter, .component-row, .sidebar-footer, .sidebar-footer>span { color: #555b56; }
+.chapter:hover, .component-row:hover { color: #202421; background: #f2f0ea; }
+.chapter.active, .component-row.active { color: #6c481a; background: #f3e8d7; }
+.progress-track { background: #dedbd2; }
+.inspector-visual { background: radial-gradient(ellipse at center, #e7e3d8, transparent 65%); }
+.movement, .depth-switch button, .connection p, .failure-details summary, .failure-details p { color: #555b56; }
+.depth-switch { background: #edebe4; }
+.depth-switch button.active { color: #66441a; background: #fff; }
+.part-explanation, .deep-detail { color: #3f4540; font-size: 15px; }
+.deep-detail, .state-card { background: #f4f1e9; }
+.connection>span, .state-card .eyebrow, .state-card p, .state-metrics>span, .awd-card p { color: #636963; }
+.state-card { border-color: #d0cbc0; }
+.state-card h3, .state-metrics strong { color: #292d29; }
+.part-actions button { color: #484e49; border-color: #c7c3b8; }
+.part-actions button:hover, .part-actions button.active { background: #f0e6d6; border-color: #b69566; }
+.restore-button { color: #fff; background: #8b5e22; }
+.slider-control>span, .selector-control>label, .secondary-controls>label:not(.slider-control), .evolve { color: #4d534e; }
+.slider-control strong { color: #272b28; }
+.slider-control small, .slider-control em { color: #6e746e; }
+.slider-control input { background: linear-gradient(to right, var(--accent) var(--progress), #d5d2c9 var(--progress)); }
+.slider-control.purple input { background: linear-gradient(to right, #8063a1 var(--progress), #d5d2c9 var(--progress)); }
+.slider-control.green input { background: linear-gradient(to right, #56854d var(--progress), #d5d2c9 var(--progress)); }
+.presets button { color: #4f554f; border-color: #cbc7bc; background: #faf9f4; }
+.presets button:hover, .presets button.active { color: #674318; background: #f0e3d0; border-color: #b28d59; }
+.rpm-coach { background: #f5f3ec; border-color: #d1cdc2; }
+.rpm-coach h3, .rpm-coach-reading strong { color: #272b28; }
+.rpm-coach p, .rpm-coach-reading em { color: #606660; }
+.selector-control select { color: #343935; background: #fff; border-color: #c9c5ba; }
+.gear-selector button { color: #555b56; border-color: #c9c5ba; }
+.gear-selector button.active { color: #fff; background: #946526; border-color: #946526; }
+.manual-steps button { color: #80571f; border-color: #bda67f; }
+.manual-steps>span, .bench-details summary, .bench-details>div>label:not(.slider-control), .bench-details p { color: #555b56; }
+.modal-backdrop { background: #48423680; }
+.modal { color: #2b302c; background: #fffefa; border-color: #cbc6b9; box-shadow: 0 35px 90px #4b443130; }
+.modal-head h2 { color: #202421; font-size: 32px; }
+.modal-intro, .evidence-grid p, .source-list p, .source-footnote, .settings-content p { color: #565d57; }
+.evidence-grid>div { background: #f5f2ea; border-color: #d4cdbc; }
+.source-list>a { border-color: #ddd8cc; }
+.source-list>a:hover { background: #f5f2ea; }
+.source-list span, .source-list h3, .source-footnote a, .settings-content>label { color: #6f4b1e; }
+.component-search { color: #292e2a; background: #fff; border-color: #c9c4b8; }
+.component-search::placeholder { color: #858a84; }
+.visibility-list>div { border-color: #dedad0; }
+.visibility-list button { color: #434943; }
+.comparison { background: radial-gradient(ellipse at top, #ffffff, #efede7 80%); }
+.comparison-heading h2, .compare-card h3 { color: #252a26; }
+.comparison-heading p, .compare-card p, .comparison-note { color: #59605a; }
+.compare-card { background: #fffefa; border-color: #d0ccc1; box-shadow: 0 8px 26px #514a3712; }
+.compare-card>.index, .compare-tag, .graph-label { color: #756449; }
+.graph-grid { stroke: #d4d0c5; }
+.toast { color: #fff; background: #75501f; border-color: #75501f; }

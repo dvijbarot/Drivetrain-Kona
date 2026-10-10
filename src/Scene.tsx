@@ -362,14 +362,14 @@ function PhotoRegistration(){
 }
 function World(){
  const c=useContext(Ctx),vehicle=c.focus==='overview'||c.focus==='awd';
- return <><color attach="background" args={['#111111']}/><fog attach="fog" args={['#111111',18,45]}/>
- <ambientLight intensity={.12}/><hemisphereLight args={['#f2efe9','#303030',.45]}/>
+ return <><color attach="background" args={['#efeee9']}/><fog attach="fog" args={['#efeee9',18,45]}/>
+ <ambientLight intensity={.22}/><hemisphereLight args={['#ffffff','#9b9b96',.58]}/>
  <directionalLight position={[-3,7,-5]} intensity={2.0} color="#f0f3f7" castShadow shadow-mapSize={c.quality==='Low'?512:2048} shadow-bias={-.0002} shadow-normalBias={.025} shadow-camera-left={-5} shadow-camera-right={5} shadow-camera-top={5} shadow-camera-bottom={-5}/>
  <rectAreaLight width={5} height={3} position={[4,4,1]} rotation={[-Math.PI/4,Math.PI/2,0]} intensity={5} color="#d3e0e7"/>
  <directionalLight position={[-5,2,4]} intensity={1.1} color="#c8d4dc"/>
  <Suspense fallback={null}><Environment files={assetPath(c.quality==='Low'?'/studio-low.hdr':'/studio.hdr')} environmentIntensity={.86} environmentRotation={[0,.65,0]}/></Suspense>
- <gridHelper visible={c.cameraView!=='Underside'} args={[30,60,'#303030','#232323']} position={[0,vehicle?-.008:-.74,0]}/>
- <mesh visible={c.cameraView!=='Underside'} rotation={[-Math.PI/2,0,0]} position={[0,vehicle?-.01:-.75,0]} receiveShadow><planeGeometry args={[100,100]}/><meshStandardMaterial color="#161c21" roughness={.84} metalness={.1}/></mesh>
+ <gridHelper visible={c.cameraView!=='Underside'} args={[30,60,'#c7c5be','#dedcd6']} position={[0,vehicle?-.008:-.74,0]}/>
+ <mesh visible={c.cameraView!=='Underside'} rotation={[-Math.PI/2,0,0]} position={[0,vehicle?-.01:-.75,0]} receiveShadow><planeGeometry args={[100,100]}/><meshStandardMaterial color="#efeee9" roughness={.88} metalness={.02}/></mesh>
  <AssetQuality.Provider value={c.quality}><Suspense fallback={null}>
  {vehicle&&c.chassis&&<Part id="chassis"><Chassis floor={c.floor} bay={c.focus==='overview'} opacity={c.dim&&c.selected!=='chassis'?.28:1}/></Part>}
  <Engine/><Converter/><IVT/><AWD/><Power/>
