@@ -55,9 +55,9 @@ Numerical readouts are illustrative. The core ratio and wheel-speed relationship
 
 ## Vehicle and detailed assemblies
 
-The exterior is an orbitable 3D SX2 teaching shell in **Ecotronic Grey (PE2)**. Use **3D exterior**, **X-ray shell**, and **Drivetrain** to move continuously from the body surface to the installed mechanical system. The shell, hood, glass and interior remain interactive while the camera can orbit, zoom and pan through a full 360 degrees.
+The exterior uses Hyundai’s consistent 36-view 2026 Kona image sequence in **Ecotronic Grey (PE2)**. Drag the photo or use the arrow keys to step around the full exterior. Use **Photo exterior**, **X-ray overlay**, and **Drivetrain** to move from the real body reference to the interactive mechanical model.
 
-Use **Drivetrain / X-ray shell / 3D exterior**, **Chassis**, **Floor pan** and **Open hood** to control the vehicle context. Camera presets include **Wheel detail**, **Underside** and **Engine bay**. Choosing Full drivetrain or 3D exterior reliably restores the complete vehicle, its perspective camera and exterior view.
+Use **Drivetrain / X-ray overlay / Photo exterior**, **Chassis**, **Floor pan** and **Engine bay** to control the vehicle context. Camera presets include **Wheel detail**, **Underside** and **Engine bay**. Choosing Full drivetrain or Photo exterior restores the exterior sequence and default perspective.
 
 The body, chassis and component castings are original educational reconstructions based on public documentation. They are not scanned or manufacturer CAD. The close-up component lessons use enlarged models so internal motion remains readable.
 
@@ -74,7 +74,7 @@ You can rebuild one family with `blender -b --python scripts/build_models.py -- 
 
 - src/mechanics.ts — pure state calculation, speed integration, constant-length pulley/chain geometry.
 - src/Assets.tsx — GLB assemblies, physically based materials, chassis and mesh LOD selection.
-- src/PhotoExterior.tsx — retained legacy photo-reference component; it is not mounted by the current 3D-shell experience.
+- src/PhotoExterior.tsx — Hyundai-hosted 36-view exterior, X-ray registration and local-photo controls.
 - scripts/build_models.py — editable original Blender modeling recipe and baked contact occlusion.
 - scripts/compress_models.mjs — local Draco compression, decoder installation and asset manifest.
 - public/models — original GLB body, chassis, engine, IVT casting and wheel/brake assets in two LODs.

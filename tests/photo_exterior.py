@@ -1,6 +1,6 @@
 """Photo exterior, cutaway registration, local-photo privacy and responsive QA.
-Run against a production preview with KONA_TEST_URL. Public builds additionally
-assert that no manufacturer image requests occur. Uses the installed Chromium.
+Run against a production preview with KONA_TEST_URL. Public and local builds use
+the same Hyundai-hosted 36-view exterior sequence. Uses the installed Chromium.
 """
 import json, os
 from pathlib import Path
@@ -12,7 +12,7 @@ PUBLIC = os.environ.get('KONA_PUBLIC_TEST') == '1'
 
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path='/usr/bin/chromium', headless=True,
-        args=['--no-sandbox', '--enable-unsafe-swiftshader', '--use-gl=angle', '--use-angle=swiftshader'])
+        args=['--ignore-certificate-errors','--no-sandbox', '--enable-unsafe-swiftshader', '--use-gl=angle', '--use-angle=swiftshader'])
     page = browser.new_page(viewport={'width':1600,'height':1100})
     errors, requests = [], []
     page.on('pageerror', lambda e: errors.append(str(e)))
@@ -26,10 +26,10 @@ with sync_playwright() as p:
     def body(mode):
         page.get_by_role('button', name='Body '+mode, exact=True).click(force=True)
     body('solid'); pause(); image_ready()
-    assert page.locator('.photo-exterior').get_attribute('data-source') == ('commons' if PUBLIC else 'hyundai')
+    assert page.locator('.photo-exterior').get_attribute('data-source') == 'hyundai'
     assert page.locator('.photo-exterior').is_visible()
     page.screenshot(path=str(OUT/('photo-public-desktop.png' if PUBLIC else 'photo-exterior-desktop.png')))
-    if not PUBLIC:
+    if True:
         initial = page.locator('.exterior-photo').get_attribute('src')
         page.get_by_role('button', name='Next exterior angle', exact=True).click()
         assert page.locator('.exterior-photo').get_attribute('src') != initial
@@ -45,7 +45,7 @@ with sync_playwright() as p:
     print('Exterior image and navigation checked', flush=True)
 
     body('ghost'); image_ready()
-    if not PUBLIC:
+    if True:
         page.wait_for_function("document.querySelector('canvas').dataset.cameraSettled==='true' && document.querySelector('.registered-photo')?.dataset.registered==='true'", timeout=60000)
         # Matrix-based registration must produce a sensible, finite onscreen size.
         geometry=page.locator('.registered-photo').evaluate('(el)=>({width:parseFloat(el.style.width),left:parseFloat(el.style.left),top:parseFloat(el.style.top)})')
@@ -53,8 +53,6 @@ with sync_playwright() as p:
         opacity=page.get_by_label('Photo shell visibility', exact=True)
         opacity.focus(); old=int(opacity.input_value());page.keyboard.press('ArrowRight')
         assert int(opacity.input_value()) == old+1
-    else:
-        assert page.locator('.photo-reference-only').is_visible()
     page.wait_for_timeout(1000)
     page.screenshot(path=str(OUT/('photo-public-cutaway.png' if PUBLIC else 'photo-xray-desktop.png')))
     body('hidden');assert not page.locator('.photo-exterior').is_visible()
@@ -102,12 +100,12 @@ with sync_playwright() as p:
         assert page.get_by_role('button',name='Body ghost',exact=True).get_attribute('class')=='active'
     print('iPad and phone layouts checked', flush=True)
     page.set_viewport_size({'width':1600,'height':1100})
-    page.get_by_label('Reveal engine bay',exact=True).check(force=True)
+    page.get_by_label('Engine bay',exact=True).check(force=True)
     page.wait_for_function("document.querySelector('canvas').dataset.cameraPreset==='Engine bay' && document.querySelector('canvas').dataset.cameraSettled==='true'",timeout=60000)
     assert not page.locator('.photo-exterior').is_visible()
     assert page.locator('canvas').is_visible()
     assert not any('/kona-sx2-body' in url for url in requests), 'Legacy body must not be rendered or loaded'
-    if PUBLIC: assert not any('s7d1.scene7.com' in url for url in requests), 'Public build requested OEM artwork'
+    assert any('s7d1.scene7.com' in url for url in requests), 'Hyundai exterior sequence was not requested'
     assert not errors, errors
     browser.close()
     (OUT/('photo-public-results.json' if PUBLIC else 'photo-results.json')).write_text(json.dumps({'status':'passed','runtime_errors':errors,'public':PUBLIC,'viewports':['desktop','ipad','phone'],'legacy_body_loaded':False,'checks':['photo navigation','cutaway registration','local photo','assembly inspection','responsive controls','engine bay']},indent=2))

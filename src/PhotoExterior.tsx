@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent } from 'react';
 import { ChevronLeft, ChevronRight, Upload, RotateCcw, ArrowUpRight } from 'lucide-react';
-import { assetPath } from './assetPath';
 
-// Hyundai-hosted images are personal reference only. Public builds use the
-// separately licensed Commons photograph; OEM binaries are never bundled.
-export const personalReferences = import.meta.env.VITE_PUBLIC_BUILD !== 'true';
+// Consistent Hyundai-hosted 36-frame exterior reference. The files remain on
+// Hyundai's image CDN and are not copied into this repository.
+export const personalReferences = true;
 export const exteriorImage = (frame: number, low = false) =>
   `https://s7d1.scene7.com/is/image/hyundai/2026-kona-ice-sel-sport-fwd-ecotronic-gray-${String(frame).padStart(3, '0')}?wid=${low ? 960 : 1800}&fmt=webp-alpha&qlt=95`;
 const manufacturerPage = 'https://www.hyundaiusa.com/us/en/vehicles/2026-kona/sel-sport';
@@ -20,17 +19,16 @@ export function PhotoExterior({ active, xray, low, cameraView, reset, imageRef, 
   onInspect: (id: string) => void; onReveal: () => void;
 }) {
   const [frame, setFrame] = useState(7);
-  const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [ownPhoto, setOwnPhoto] = useState<string | null>(null);
   const [opacity, setOpacity] = useState(24);
   const [error, setError] = useState('');
   const drag = useRef<{ id: number; x: number; frame: number } | null>(null);
   const picker = useRef<HTMLInputElement>(null);
-  const manufacturer = personalReferences && !failed && !ownPhoto;
+  const manufacturer = !ownPhoto;
   const registered = active && xray && manufacturer;
   const shownFrame = registered ? 1 : frame;
-  const src = ownPhoto || (manufacturer ? exteriorImage(shownFrame, low) : assetPath('/photos/kona-sx2-reference.jpg'));
+  const src = ownPhoto || exteriorImage(shownFrame, low);
   useEffect(() => { onRegistered(registered); return () => onRegistered(false); }, [registered, onRegistered]);
   useEffect(() => { setLoaded(false); }, [src]);
   useEffect(() => { setFrame(cameraView === 'Side' ? 1 : cameraView === 'Front' ? 10 : 7); }, [cameraView, reset]);
@@ -60,7 +58,7 @@ export function PhotoExterior({ active, xray, low, cameraView, reset, imageRef, 
       <img ref={imageRef} className={'exterior-photo ' + (registered ? 'registered-photo' : '')}
         src={src} alt={manufacturer ? '2026 Hyundai Kona SEL Sport exterior in Ecotronic Grey, manufacturer reference' : ownPhoto ? 'Your personal vehicle photo' : 'Grey Hyundai Kona SX2 photographed by Alexander-93'}
         draggable={false} decoding="async" style={{ '--body-opacity': opacity / 100 } as CSSProperties}
-        onLoad={() => setLoaded(true)} onError={() => { if (manufacturer) { setFailed(true); setLoaded(false); } else { setError('The image could not load. You can choose a photo from your device.'); } }} />
+        onLoad={() => { setLoaded(true); setError(''); }} onError={() => { setLoaded(false); setError('Hyundai’s exterior image set could not load. You can choose a photo from your device.'); }} />
       {!loaded && !xray && !error && <span className="photo-loading" role="status">Loading exterior reference…</span>}
       {!xray && <div className="photo-inspect"><span>LOOK INSIDE</span><button onClick={() => onInspect('engine')}>2.0L engine <ArrowUpRight size={12}/></button><button onClick={() => onInspect('converter')}>Converter <ArrowUpRight size={12}/></button><button onClick={() => onInspect('primary')}>IVT <ArrowUpRight size={12}/></button><button onClick={() => onInspect('coupling')}>HTRAC AWD <ArrowUpRight size={12}/></button></div>}
     </div>

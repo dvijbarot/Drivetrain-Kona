@@ -13,12 +13,13 @@ import type { Snapshot, Inputs } from './mechanics';
 import { beltPath, pulleyRadii } from './mechanics';
 import type { Focus, View } from './content';
 import { partById, parts } from './content';
-import { ModelAsset, Chassis, VehicleBody, AssetQuality } from './Assets';
+import { ModelAsset, Chassis, AssetQuality } from './Assets';
 import type { BodyMode } from './Assets';
+import { PhotoExterior } from './PhotoExterior';
 import { assetPath } from './assetPath';
 
 export type SceneProps={s:Snapshot;inputs:Inputs;selected:string;onSelect:(id:string)=>void;onInspect:(id:string)=>void;onReveal:()=>void;focus:Focus;view:View;explode:number;labels:boolean;hidden:string[];isolated:string|null;dim:boolean;playing:boolean;rate:number;time:number;quality:string;cameraReset:number;cameraView:string;power:boolean;body:BodyMode;chassis:boolean;floor:boolean;hoodOpen:boolean;onSoftwareRenderer?:()=>void;};
-const Ctx=createContext<SceneProps & {labelNodes:Map<string,HTMLButtonElement>}>(null!);
+const Ctx=createContext<SceneProps & {labelNodes:Map<string,HTMLButtonElement>;photoRegistered:boolean;photoRef:React.RefObject<HTMLImageElement|null>}>(null!);
 const MatCtx=createContext({opacity:1,selected:false});
 const XROT:[number,number,number]=[0,0,Math.PI/2];
 function Material({color='#8e99a4',metal=.8,rough=.3,opacity=1}:{color?:string;metal?:number;rough?:number;opacity?:number}){
@@ -317,24 +318,9 @@ function CameraRig(){
  if(c.cameraView==='Underside'){target.set(0,.347,0);pos.set(3,-2.2,-4.2)}
  if(c.cameraView==='Wheel detail'){target.set(.80,.347,-1.33);pos.set(1.95,.78,-2.25)}
  if(c.cameraView==='Engine bay'){target.set(0,.66,-1.38);pos.set(-1.4,2.0,-2.4)}
+ if(c.photoRegistered){target.set(0,.75,0);pos.set(-7.4,1.65,-.10)}
  if(c.explode>.5&&c.focus!=='overview'&&c.focus!=='awd')pos.add(new THREE.Vector3(1.5,1,1.5));
- const aspect=size.width/size.height;
- const padding=Math.max(1,(vehicle?1.35:1.3)/aspect);
- const perspective=c.cameraView==='Perspective';
- // Fill the larger exhibit with the mechanism, retaining more clearance during explosion.
- const zoom=perspective?(vehicle?(c.explode>.5?.72:(size.width<=600?.68:.58)):(aspect<1?(c.explode>.5?.80:(c.focus==='ivt'?.70:.58)):1)):1;
- pos.sub(target).multiplyScalar(padding*zoom).add(target);
- if(perspective&&c.focus==='overview'){const shift=size.width<=600?.12:.30;pos.y-=shift;target.y-=shift;}
- if(perspective&&aspect<1&&!vehicle){
-  // Reserve the top controls on phones; keep the enlarged assembly in the clear working area.
-  const direction=target.clone().sub(pos).normalize();
-  const right=direction.clone().cross(new THREE.Vector3(0,1,0)).normalize();
-  const up=right.cross(direction).normalize();
-  const halfHeight=pos.distanceTo(target)*Math.tan(THREE.MathUtils.degToRad(38/2));
-  const offset=up.multiplyScalar(halfHeight*140/size.height);
-  target.add(offset);pos.add(offset);
- }
-
+ const aspect=size.width/size.height,padding=Math.max(1,(c.focus==='overview'||c.focus==='awd'?1.35:1.3)/aspect);pos.sub(target).multiplyScalar(padding).add(target);
  const start=camera.position.clone(),startTarget=controls.current?.target.clone()||new THREE.Vector3(0,.15,1.1);
  const state={progress:0};
  gl.domElement.dataset.cameraSettled='false';gl.domElement.dataset.cameraPreset=c.cameraView;
@@ -342,26 +328,52 @@ function CameraRig(){
  const tween=gsap.to(state,{progress:1,duration:1.15,ease:'power2.inOut',onUpdate:()=>{
   camera.position.lerpVectors(start,pos,state.progress);invalidate();
   if(controls.current){controls.current.target.lerpVectors(startTarget,target,state.progress);controls.current.update();}
- },onComplete:()=>{if(controls.current){controls.current.enabled=true;controls.current.enableDamping=true;}gl.domElement.dataset.cameraSettled='true';invalidate();}});
+ },onComplete:()=>{if(controls.current){controls.current.enabled=!c.photoRegistered;controls.current.enableDamping=true;}gl.domElement.dataset.cameraSettled='true';invalidate();}});
  return ()=>{tween.kill();if(controls.current){controls.current.enabled=true;controls.current.enableDamping=true;}};
- },[c.focus,c.cameraReset,c.cameraView,c.explode>.5,size.width,size.height]);
- return <OrbitControls ref={controls} makeDefault enableDamping dampingFactor={.075} minDistance={.6} maxDistance={30} maxPolarAngle={Math.PI*.84}/>;
+ },[c.focus,c.cameraReset,c.cameraView,c.explode>.5,c.photoRegistered,size.width,size.height]);
+ return <OrbitControls ref={controls} makeDefault enabled={!c.photoRegistered} enableDamping dampingFactor={.075} minDistance={.6} maxDistance={30} maxPolarAngle={Math.PI*.84}/>;
+}
+/** Register the real side photograph to the visible wheel centres. This is a
+ * two-point presentation alignment, not a claim of OEM CAD registration. */
+function PhotoRegistration(){
+ const c=useContext(Ctx);
+ const front=useMemo(()=>new THREE.Vector3(-.80,.347,-1.33),[]);
+ const rear=useMemo(()=>new THREE.Vector3(-.80,.347,1.33),[]);
+ const a=useMemo(()=>new THREE.Vector3(),[]),b=useMemo(()=>new THREE.Vector3(),[]);
+ useEffect(()=>{
+  const el=c.photoRef.current;
+  if(!c.photoRegistered&&el){for(const property of ['left','top','width','transform'])el.style.removeProperty(property);delete el.dataset.registered;}
+ },[c.photoRegistered,c.photoRef]);
+ useFrame(({camera,size})=>{
+  const el=c.photoRef.current;if(!c.photoRegistered||!el)return;
+  camera.updateMatrixWorld();
+  a.copy(front).project(camera);b.copy(rear).project(camera);
+  const ax=(a.x*.5+.5)*size.width,ay=(-a.y*.5+.5)*size.height;
+  const bx=(b.x*.5+.5)*size.width,by=(-b.y*.5+.5)*size.height;
+  // Measured wheel centres in Hyundai frame 001 (normalized 16:9 image).
+  const fx=.253,fy=.665*9/16,rx=.790,ry=.660*9/16;
+  const width=Math.hypot(bx-ax,by-ay)/Math.hypot(rx-fx,ry-fy);
+  const angle=Math.atan2(by-ay,bx-ax)-Math.atan2(ry-fy,rx-fx);
+  el.style.width=width+'px';el.style.left=(ax-width*(fx*Math.cos(angle)-fy*Math.sin(angle)))+'px';
+  el.style.top=(ay-width*(fx*Math.sin(angle)+fy*Math.cos(angle)))+'px';
+  el.style.transform=`rotate(${angle}rad)`;el.dataset.registered='true';
+ });
+ return null;
 }
 function World(){
  const c=useContext(Ctx),vehicle=c.focus==='overview'||c.focus==='awd';
  return <><color attach="background" args={['#111111']}/><fog attach="fog" args={['#111111',18,45]}/>
  <ambientLight intensity={.12}/><hemisphereLight args={['#f2efe9','#303030',.45]}/>
  <directionalLight position={[-3,7,-5]} intensity={2.0} color="#f0f3f7" castShadow shadow-mapSize={c.quality==='Low'?512:2048} shadow-bias={-.0002} shadow-normalBias={.025} shadow-camera-left={-5} shadow-camera-right={5} shadow-camera-top={5} shadow-camera-bottom={-5}/>
- <rectAreaLight width={5} height={3} position={[4,4,1]} rotation={[-Math.PI/4,Math.PI/2,0]} intensity={5} color="#eee9e1"/>
- <directionalLight position={[-5,2,4]} intensity={1.1} color="#e1e1de"/>
+ <rectAreaLight width={5} height={3} position={[4,4,1]} rotation={[-Math.PI/4,Math.PI/2,0]} intensity={5} color="#d3e0e7"/>
+ <directionalLight position={[-5,2,4]} intensity={1.1} color="#c8d4dc"/>
  <Suspense fallback={null}><Environment files={assetPath(c.quality==='Low'?'/studio-low.hdr':'/studio.hdr')} environmentIntensity={.86} environmentRotation={[0,.65,0]}/></Suspense>
  <gridHelper visible={c.cameraView!=='Underside'} args={[30,60,'#303030','#232323']} position={[0,vehicle?-.008:-.74,0]}/>
- <mesh visible={c.cameraView!=='Underside'} rotation={[-Math.PI/2,0,0]} position={[0,vehicle?-.01:-.75,0]} receiveShadow><planeGeometry args={[100,100]}/><meshStandardMaterial color="#111111" roughness={.84} metalness={.1}/></mesh>
+ <mesh visible={c.cameraView!=='Underside'} rotation={[-Math.PI/2,0,0]} position={[0,vehicle?-.01:-.75,0]} receiveShadow><planeGeometry args={[100,100]}/><meshStandardMaterial color="#161c21" roughness={.84} metalness={.1}/></mesh>
  <AssetQuality.Provider value={c.quality}><Suspense fallback={null}>
  {vehicle&&c.chassis&&<Part id="chassis"><Chassis floor={c.floor} bay={c.focus==='overview'} opacity={c.dim&&c.selected!=='chassis'?.28:1}/></Part>}
  <Engine/><Converter/><IVT/><AWD/><Power/>
- {vehicle&&!c.hidden.includes('body')&&!c.isolated&&<VehicleBody mode={c.body} hoodOpen={c.hoodOpen} explode={c.explode} onSelect={c.onSelect}/>}
- </Suspense></AssetQuality.Provider><CameraRig/>
+ </Suspense></AssetQuality.Provider><CameraRig/><PhotoRegistration/>
  {c.quality==='High'&&<EffectComposer multisampling={4}><N8AO aoRadius={vehicle?.15:.35} intensity={1.1} distanceFalloff={1} quality="medium"/><Bloom luminanceThreshold={2} intensity={.08} mipmapBlur/><ToneMapping mode={ToneMappingMode.ACES_FILMIC}/></EffectComposer>}
  </>;
 }
@@ -370,8 +382,12 @@ class SceneBoundary extends Component<{children:ReactNode},{error:boolean}>{
 }
 export default function DrivetrainScene(props:SceneProps){
  const labelNodes=useMemo(()=>new Map<string,HTMLButtonElement>(),[]);const loading=useProgress(state=>state.active);
- return <SceneBoundary><div className="canvas-host">
- <Canvas frameloop={props.playing?'always':'demand'} onCreated={({gl})=>{gl.localClippingEnabled=true;gl.toneMapping=THREE.ACESFilmicToneMapping;gl.toneMappingExposure=.98;const ctx=gl.getContext(),ext=ctx.getExtension('WEBGL_debug_renderer_info');if(ext&&/swiftshader|llvmpipe|software/i.test(ctx.getParameter(ext.UNMASKED_RENDERER_WEBGL)))props.onSoftwareRenderer?.()}} shadows={props.quality!=='Low'} dpr={props.quality==='Low'?1:[1,1.7]} camera={{position:[-4.8,3.4,-5.5],fov:38,near:.025,far:100}} gl={{antialias:props.quality!=='Low',powerPreference:'high-performance'}} onPointerMissed={()=>{document.body.style.cursor='auto'}}><Ctx.Provider value={{...props,labelNodes}}><World/></Ctx.Provider></Canvas>
- <div className="world-labels">{parts.map(p=><button key={p.id} ref={el=>{if(el)labelNodes.set(p.id,el);else labelNodes.delete(p.id)}} style={{display:'none'}} className={'part-label '+(props.selected===p.id?'selected':'')} onClick={()=>props.onSelect(p.id)}><i style={{background:p.color}}/><span>{p.name}</span></button>)}</div>
- {loading&&<div className="asset-loading" role="status"><span className="loader"/>Loading detailed assembly…</div>}</div></SceneBoundary>;
+ const photoRef=useRef<HTMLImageElement>(null);const [photoRegistered,setPhotoRegistered]=useState(false);
+ const photoActive=['overview','awd'].includes(props.focus)&&props.body!=='Hidden'&&!props.hoodOpen&&(!props.isolated||props.isolated==='body')&&!props.hidden.includes('body')&&props.explode<.02&&!['Top','Underside','Wheel detail','Engine bay'].includes(props.cameraView);
+ const solid=photoActive&&props.body==='Solid';
+ return <SceneBoundary><div className={'canvas-host '+(solid?'exterior-active':'')}>
+ <Canvas frameloop={props.playing&&!solid?'always':'demand'} onCreated={({gl})=>{gl.localClippingEnabled=true;gl.toneMapping=THREE.ACESFilmicToneMapping;gl.toneMappingExposure=.98;const ctx=gl.getContext(),ext=ctx.getExtension('WEBGL_debug_renderer_info');if(ext&&/swiftshader|llvmpipe|software/i.test(ctx.getParameter(ext.UNMASKED_RENDERER_WEBGL)))props.onSoftwareRenderer?.()}} shadows={props.quality!=='Low'} dpr={props.quality==='Low'?1:[1,1.7]} camera={{position:[-4.8,3.4,-5.5],fov:38,near:.025,far:100}} gl={{antialias:props.quality!=='Low',powerPreference:'high-performance'}} onPointerMissed={()=>{document.body.style.cursor='auto'}}><Ctx.Provider value={{...props,playing:props.playing&&!solid,labelNodes,photoRegistered:photoActive&&photoRegistered,photoRef}}><World/></Ctx.Provider></Canvas>
+ <div className="world-labels" hidden={solid}>{parts.map(p=><button key={p.id} ref={el=>{if(el)labelNodes.set(p.id,el);else labelNodes.delete(p.id)}} style={{display:'none'}} className={'part-label '+(props.selected===p.id?'selected':'')} onClick={()=>props.onSelect(p.id)}><i style={{background:p.color}}/><span>{p.name}</span></button>)}</div>
+ <PhotoExterior active={photoActive} xray={props.body==='Ghost'} low={props.quality==='Low'} cameraView={props.cameraView} reset={props.cameraReset} imageRef={photoRef} onRegistered={setPhotoRegistered} onInspect={props.onInspect} onReveal={props.onReveal}/>
+ {loading&&!solid&&<div className="asset-loading" role="status"><span className="loader"/>Loading detailed assembly…</div>}</div></SceneBoundary>;
 }
