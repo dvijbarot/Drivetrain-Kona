@@ -23,6 +23,10 @@ The production bundle is in dist/. It can be served with any private static web 
 
 ## GitHub Pages
 
+Public exhibit: https://dvijbarot.github.io/Drivetrain-Kona/
+
+For a new repository, enable Pages in **Settings → Pages**. **GitHub Actions** is the recommended publishing source, so GitHub serves the built application rather than also running a separate branch/Jekyll build. Once Pages is enabled, push to `main` or rerun the **Deploy GitHub Pages** workflow.
+
 The public GitHub Pages copy deploys automatically when `main` changes. The workflow installs the locked dependencies, runs the mechanics and asset tests, builds with the repository's URL prefix, and publishes `dist/` through GitHub's official Pages actions. Models, the local Draco decoder, environment maps, fonts and source documents all respect that prefix.
 
 For a local project-path build:
